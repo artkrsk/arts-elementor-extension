@@ -25,14 +25,19 @@ import { startLiveReloadServer } from '../utils/common/live-reload.js'
  */
 export class Builder {
   constructor() {
+    // Use process.cwd() to get the actual project directory regardless of symlinks
+    // This assumes the build script is always run from the project root
+    const PROJECT_ROOT = process.cwd()
+
+    // Get the actual build directory path by resolving from the current module
     const __dirname = path.dirname(fileURLToPath(import.meta.url))
-    const PROJECT_ROOT = path.resolve(__dirname, '../..')
+    const BUILD_DIR = path.resolve(__dirname, '..')
 
     this.config = null
     this.logger = logger
     this.paths = {
       project: PROJECT_ROOT,
-      build: path.resolve(__dirname, '..')
+      build: BUILD_DIR
     }
     this.liveReloadServer = null
     this.watchers = {}

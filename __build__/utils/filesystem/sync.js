@@ -238,11 +238,13 @@ async function syncComposerFiles(config, isDev) {
   }
 
   const pluginDest = getPluginDestPath(config, isDev)
+  // Use the project root from config or fall back to current working directory
+  const projectRoot = config._absoluteProjectRoot || process.cwd()
 
   logger.debug(`Syncing composer files to ${pluginDest}`)
 
   for (const fileName of composerFiles) {
-    const source = path.join(process.cwd(), fileName)
+    const source = path.join(projectRoot, fileName)
 
     // Skip if file doesn't exist
     if (!(await fs.pathExists(source))) {
