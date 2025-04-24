@@ -1,0 +1,33 @@
+{
+  "name": "arts/elementor-extension",
+  "description": "WordPress library",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Artem Semkin",
+      "email": "me@artemsemkin.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Arts\\ElementorExtension\\": "src/php/"
+    }
+  },
+  "require": {
+    "php": ">=7.4",
+    "arts/utilities": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6",
+    "yoast/phpunit-polyfills": "^4.0",
+    "brain/monkey": "^2.6"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    },
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
+}

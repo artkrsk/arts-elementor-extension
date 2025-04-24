@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "allowJs": true,
+    "checkJs": true,
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/js/*"],
+      "@core/*": ["src/js/core/*"],
+      "@controls/*": ["src/js/controls/*"],
+      "@hooks/*": ["src/js/hooks/*"],
+      "@services/*": ["src/js/services/*"]
+    },
+    "outDir": "dist",
+    "declaration": true,
+    "sourceMap": true
+  },
+  "include": ["src/js/**/*", "src/js/**/*.d.ts"],
+  "exclude": ["node_modules", "dist", "__build__"]
+}
