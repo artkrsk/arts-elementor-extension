@@ -62,27 +62,21 @@ importers:
       globals:
         specifier: ^16.0.0
         version: 16.0.0
-      graceful-fs:
-        specifier: ^4.2.11
-        version: 4.2.11
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
-      jsonfile:
-        specifier: ^6.1.0
-        version: 6.1.0
       npm-check-updates:
         specifier: ^18.0.0
-        version: 18.0.0
+        version: 18.0.1
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
+      readdirp:
+        specifier: ^4.1.2
+        version: 4.1.2
       sass:
         specifier: ^1.87.0
         version: 1.87.0
-      universalify:
-        specifier: ^2.0.1
-        version: 2.0.1
       vitest:
         specifier: ^3.1.2
         version: 3.1.2(@types/node@22.14.1)(@vitest/ui@3.1.2)(jsdom@26.1.0)(sass@1.87.0)
@@ -1018,6 +1012,9 @@ packages:
 
   core-util-is@1.0.2:
     resolution: {integrity: sha512-3lqz5YjWTYnW6dlDa5TLaTCcShfar1e40rmcJVwCBJC6mWlFuj0eCHIElmG1g5kyuJ/GD+8Wn4FFCcz4gJPfaQ==}
+
+  core-util-is@1.0.3:
+    resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
 
   cors@2.8.5:
     resolution: {integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==}
@@ -1962,8 +1959,8 @@ packages:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
 
-  npm-check-updates@18.0.0:
-    resolution: {integrity: sha512-ymh9KF/xcGypQuCr5NQw1pAMRh5mHnQQDgHwM8gQBG8siG9XAKvcP9OtoARxFRgOjzEfjD6YtU/7KB2jJqGGlQ==}
+  npm-check-updates@18.0.1:
+    resolution: {integrity: sha512-MO7mLp/8nm6kZNLLyPgz4gHmr9tLoU+pWPLdXuGAx+oZydBHkHWN0ibTonsrfwC2WEQNIQxuZagYwB67JQpAuw==}
     engines: {node: ^18.18.0 || >=20.0.0, npm: '>=8.12.1'}
     hasBin: true
 
@@ -2564,8 +2561,8 @@ packages:
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
 
-  vite@6.3.2:
-    resolution: {integrity: sha512-ZSvGOXKGceizRQIZSz7TGJ0pS3QLlVY/9hwxVh17W3re67je1RKYzFHivZ/t0tubU78Vkyb9WnHPENSBCzbckg==}
+  vite@6.3.3:
+    resolution: {integrity: sha512-5nXH+QsELbFKhsEfWLkHrvgRpTdGJzqOZ+utSdmPTvwHmvU6ITTm3xx+mRusihkcI8GeC7lCDyn3kDtiki9scw==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -3215,13 +3212,13 @@ snapshots:
       chai: 5.2.0
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.1.2(vite@6.3.2(@types/node@22.14.1)(sass@1.87.0))':
+  '@vitest/mocker@3.1.2(vite@6.3.3(@types/node@22.14.1)(sass@1.87.0))':
     dependencies:
       '@vitest/spy': 3.1.2
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 6.3.2(@types/node@22.14.1)(sass@1.87.0)
+      vite: 6.3.3(@types/node@22.14.1)(sass@1.87.0)
 
   '@vitest/pretty-format@3.1.2':
     dependencies:
@@ -3641,6 +3638,8 @@ snapshots:
   cookie@0.7.2: {}
 
   core-util-is@1.0.2: {}
+
+  core-util-is@1.0.3: {}
 
   cors@2.8.5:
     dependencies:
@@ -4674,7 +4673,7 @@ snapshots:
 
   normalize-path@3.0.0: {}
 
-  npm-check-updates@18.0.0: {}
+  npm-check-updates@18.0.1: {}
 
   npm-run-path@4.0.1:
     dependencies:
@@ -4839,7 +4838,7 @@ snapshots:
 
   readable-stream@2.3.8:
     dependencies:
-      core-util-is: 1.0.2
+      core-util-is: 1.0.3
       inherits: 2.0.4
       isarray: 1.0.0
       process-nextick-args: 2.0.1
@@ -5315,7 +5314,7 @@ snapshots:
       debug: 4.4.0(supports-color@8.1.1)
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 6.3.2(@types/node@22.14.1)(sass@1.87.0)
+      vite: 6.3.3(@types/node@22.14.1)(sass@1.87.0)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -5330,7 +5329,7 @@ snapshots:
       - tsx
       - yaml
 
-  vite@6.3.2(@types/node@22.14.1)(sass@1.87.0):
+  vite@6.3.3(@types/node@22.14.1)(sass@1.87.0):
     dependencies:
       esbuild: 0.25.3
       fdir: 6.4.4(picomatch@4.0.2)
@@ -5346,7 +5345,7 @@ snapshots:
   vitest@3.1.2(@types/node@22.14.1)(@vitest/ui@3.1.2)(jsdom@26.1.0)(sass@1.87.0):
     dependencies:
       '@vitest/expect': 3.1.2
-      '@vitest/mocker': 3.1.2(vite@6.3.2(@types/node@22.14.1)(sass@1.87.0))
+      '@vitest/mocker': 3.1.2(vite@6.3.3(@types/node@22.14.1)(sass@1.87.0))
       '@vitest/pretty-format': 3.1.2
       '@vitest/runner': 3.1.2
       '@vitest/snapshot': 3.1.2
@@ -5363,7 +5362,7 @@ snapshots:
       tinyglobby: 0.2.13
       tinypool: 1.0.2
       tinyrainbow: 2.0.0
-      vite: 6.3.2(@types/node@22.14.1)(sass@1.87.0)
+      vite: 6.3.3(@types/node@22.14.1)(sass@1.87.0)
       vite-node: 3.1.2(@types/node@22.14.1)(sass@1.87.0)
       why-is-node-running: 2.3.0
     optionalDependencies:

@@ -52,6 +52,42 @@ export async function loadConfig(projectRoot, env = DEFAULT_ENV) {
     // Store the absolute project root in the config for reference
     mergedConfig._absoluteProjectRoot = absoluteProjectRoot
 
+    // Initialize TypeScript config if not present
+    if (!mergedConfig.ts) {
+      // Check for presence of tsconfig.json to auto-enable
+      const tsconfigPath = path.join(absoluteProjectRoot, 'tsconfig.json')
+      const hasTsConfig = await fs.pathExists(tsconfigPath)
+
+      // Build default TypeScript configuration
+      mergedConfig.ts = {
+        enabled: hasTsConfig,
+        // Default entry point is the same as JS but with .ts extension
+        entry: mergedConfig.entry
+          ? mergedConfig.entry.replace(/\.(js|jsx)$/, '.ts')
+          : './src/js/index.ts',
+        // Default TypeScript directory is the same as JS directory
+        directory: mergedConfig.paths?.js || './src/js',
+        // Configuration for file extensions
+        extension: '.ts',
+        jsExtension: '.js',
+        watchExtensions: ['.ts', '.tsx'],
+        // TypeScript compiler options
+        tsconfigPath: 'tsconfig.json',
+        // Format used in development mode
+        devFormat: 'iife',
+        // Default loaders for esbuild
+        loaders: {
+          '.ts': 'ts',
+          '.tsx': 'tsx'
+        },
+        // Watcher options
+        debounceTime: 300,
+        ignorePermissionErrors: true,
+        // Additional esbuild options
+        esbuildOptions: {}
+      }
+    }
+
     logger.success(`Loaded configuration for ${env} environment`)
     return mergedConfig
   } catch (error) {
@@ -88,6 +124,29 @@ export function validateConfig(config) {
       if (value === undefined) {
         throw new Error(`Missing required configuration: ${field}`)
       }
+    }
+  }
+
+  // Check if TypeScript is explicitly enabled
+  if (config.ts?.enabled === true) {
+    logger.info('TypeScript compilation is enabled')
+
+    // Check entry point
+    if (!config.ts.entry) {
+      logger.warn('TypeScript entry point not specified, using default derived from JS entry')
+      config.ts.entry = config.entry.replace(
+        new RegExp(`${config.ts.jsExtension || '.js'}$`),
+        config.ts.extension || '.ts'
+      )
+    }
+
+    // Ensure TypeScript config path is valid
+    const tsconfigPath = path.isAbsolute(config.ts.tsconfigPath)
+      ? config.ts.tsconfigPath
+      : path.join(config._absoluteProjectRoot, config.ts.tsconfigPath || 'tsconfig.json')
+
+    if (!fs.existsSync(tsconfigPath)) {
+      logger.warn(`TypeScript config file not found at ${tsconfigPath}, will use esbuild defaults`)
     }
   }
 

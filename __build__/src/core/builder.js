@@ -8,10 +8,12 @@ import {
   shouldCreateDistFolder,
   getLibraryDir
 } from '../utils/common/paths.js'
+import { getPackageVersion } from '../utils/common/package.js'
 import fs from 'fs-extra'
 
 // Core utilities
 import { compileJavaScript, watchJavaScript } from '../utils/assets/javascript.js'
+import { compileTypeScript, watchTypeScript } from '../utils/assets/typescript.js'
 import { compileSass, watchSass } from '../utils/assets/sass.js'
 import { cleanDirectories } from '../utils/filesystem/clean.js'
 import { syncFiles, watchForFileChanges } from '../utils/filesystem/sync.js'
@@ -114,6 +116,69 @@ export class Builder {
   }
 
   /**
+   * Check if TypeScript compilation is enabled
+   * @private
+   * @returns {Promise<boolean>} Whether TypeScript compilation is enabled
+   */
+  async isTypeScriptEnabled() {
+    try {
+      // Check if TypeScript is explicitly enabled in config
+      if (this.config.ts?.enabled === true) {
+        return true
+      }
+
+      // Check if TypeScript entry file exists
+      if (this.config.ts?.entry) {
+        const entryPath = path.isAbsolute(this.config.ts.entry)
+          ? this.config.ts.entry
+          : path.resolve(this.config._absoluteProjectRoot, this.config.ts.entry)
+
+        if (await fs.pathExists(entryPath)) {
+          logger.info(
+            `Found TypeScript entry file: ${path.relative(this.config._absoluteProjectRoot, entryPath)}`
+          )
+          return true
+        }
+      }
+
+      // Check if tsconfig.json exists
+      const tsconfigPath = path.isAbsolute(this.config.ts?.tsconfigPath || 'tsconfig.json')
+        ? this.config.ts?.tsconfigPath || 'tsconfig.json'
+        : path.resolve(
+            this.config._absoluteProjectRoot,
+            this.config.ts?.tsconfigPath || 'tsconfig.json'
+          )
+
+      if (await fs.pathExists(tsconfigPath)) {
+        // Only auto-enable if the primary JS entry point doesn't exist but TS version does
+        const jsEntryPath = path.isAbsolute(this.config.entry)
+          ? this.config.entry
+          : path.resolve(this.config._absoluteProjectRoot, this.config.entry)
+
+        const tsEntryPath = jsEntryPath.replace(
+          new RegExp(`${this.config.ts?.jsExtension || '.js'}$`),
+          this.config.ts?.extension || '.ts'
+        )
+
+        const jsExists = await fs.pathExists(jsEntryPath)
+        const tsExists = await fs.pathExists(tsEntryPath)
+
+        if (!jsExists && tsExists) {
+          logger.info(
+            `JS entry not found but TS entry exists, enabling TypeScript: ${path.relative(this.config._absoluteProjectRoot, tsEntryPath)}`
+          )
+          return true
+        }
+      }
+
+      return false
+    } catch (error) {
+      logger.warn(`Error detecting TypeScript, defaulting to disabled: ${error.message}`)
+      return false
+    }
+  }
+
+  /**
    * Run the build process for production
    */
   async build() {
@@ -123,6 +188,10 @@ export class Builder {
       }
 
       logger.info('🚀 Starting production build...')
+
+      // Get package version
+      const version = await getPackageVersion(this.paths.project)
+      this.config.version = version
 
       // Ensure required directories exist
       await this.ensureDirectories()
@@ -135,8 +204,16 @@ export class Builder {
         await updatePluginMeta(this.config)
       }
 
-      // Compile JavaScript (will build to direct library or dist based on config)
-      await compileJavaScript(this.config)
+      // Check if TypeScript is enabled
+      const useTypeScript = await this.isTypeScriptEnabled()
+
+      if (useTypeScript) {
+        // Compile TypeScript if enabled
+        await compileTypeScript(this.config)
+      } else {
+        // Compile JavaScript if TypeScript is not enabled
+        await compileJavaScript(this.config)
+      }
 
       // Compile Sass (will build to direct library or dist based on config)
       await compileSass(this.config)
@@ -193,8 +270,16 @@ export class Builder {
         await updatePluginMeta(this.config)
       }
 
+      // Check if TypeScript is enabled
+      const useTypeScript = await this.isTypeScriptEnabled()
+
       // Initial builds
-      await compileJavaScript(this.config)
+      if (useTypeScript) {
+        await compileTypeScript(this.config)
+      } else {
+        await compileJavaScript(this.config)
+      }
+
       await compileSass(this.config)
       await generatePot(this.config)
 
@@ -210,7 +295,12 @@ export class Builder {
       }
 
       // Set up watchers
-      this.watchers.js = await watchJavaScript(this.config, this.liveReloadServer)
+      if (useTypeScript) {
+        this.watchers.ts = await watchTypeScript(this.config, this.liveReloadServer)
+      } else {
+        this.watchers.js = await watchJavaScript(this.config, this.liveReloadServer)
+      }
+
       this.watchers.sass = await watchSass(this.config, this.liveReloadServer)
       this.watchers.php = await watchPhpForTranslations(this.config)
       this.watchers.composer = await watchComposerJson(this.config)
