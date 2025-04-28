@@ -36,7 +36,9 @@ coverage export-ignore
 
 # Source files not needed in the Composer package
 src/ts export-ignore
-# Make sure src/wordpress is included by NOT adding it to export-ignore
+src/js export-ignore
+src/legacy export-ignore
+src/styles export-ignore
 
 # Markdown files except README.md
 /*.md export-ignore
