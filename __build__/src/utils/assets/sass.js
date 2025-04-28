@@ -27,10 +27,15 @@ export async function compileSass(config) {
     const shouldCreateDist = shouldCreateDistFolder(config)
     const packageMetadata = await getPackageMetadata(config)
 
+    logger.debug(
+      `Environment: ${config.currentEnvironment}, isDev: ${isDev}, outputStyle: ${config.sass.options.outputStyle}`
+    )
+
     // Get file contents with banner
     const result = sassCompiler.compile(config.sass.entry, {
       ...config.sass.options,
-      sourceMap: isDev
+      sourceMap: isDev,
+      style: config.sass.options.outputStyle
     })
 
     // Add banner

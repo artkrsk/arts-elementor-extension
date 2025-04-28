@@ -37,11 +37,11 @@ export async function getComposerVersion(config) {
 
 /**
  * Get the project version from the preferred source
- * @param {string} [preferred='composer'] - Preferred source ('composer' or 'package')
+ * @param {string} [preferred='package'] - Preferred source ('composer' or 'package')
  * @param {Object} [config] - Project configuration
  * @returns {Promise<string>} The project version
  */
-export async function getProjectVersion(preferred = 'composer', config) {
+export async function getProjectVersion(preferred = 'package', config) {
   return preferred === 'composer'
     ? await getComposerVersion(config).catch(() => getPackageVersion(config))
     : await getPackageVersion(config).catch(() => getComposerVersion(config))
@@ -53,7 +53,7 @@ export async function getProjectVersion(preferred = 'composer', config) {
  * @returns {Promise<Object>} Package metadata
  */
 export async function getPackageMetadata(config) {
-  const version = await getProjectVersion('composer', config)
+  const version = await getProjectVersion('package', config)
   return {
     name: config.name,
     version,
