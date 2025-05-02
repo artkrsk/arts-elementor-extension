@@ -5,7 +5,8 @@ import {
   getLibraryDir,
   getPluginDestPath,
   shouldCreateDistFolder,
-  getDirectLibraryPath
+  getDirectLibraryPath,
+  getDirectChunksOutputDir
 } from '../common/paths.js'
 import { isDevelopment } from '../../config/index.js'
 
@@ -51,6 +52,9 @@ export async function cleanDirectories(config) {
     }
   }
 
+  // Clean specific files from library directory (both UMD and ESM files)
+  await cleanLibraryFiles(config)
+
   // Ensure necessary subdirectories exist
   await ensurePluginDirectories(config)
 
@@ -62,6 +66,57 @@ export async function cleanDirectories(config) {
   }
 
   logger.success('✅ Directories cleaned successfully')
+}
+
+/**
+ * Clean library files including both UMD and ESM files with chunks
+ * @param {Object} config - Project configuration
+ * @returns {Promise<void>}
+ */
+async function cleanLibraryFiles(config) {
+  const directLibraryPath = getDirectLibraryPath(config)
+  if (!directLibraryPath || !(await fs.pathExists(directLibraryPath))) {
+    return
+  }
+
+  try {
+    const files = await fs.readdir(directLibraryPath)
+
+    // Get patterns to match JS/ESM files and chunks
+    // Include both index.mjs and index.js to handle transitional states
+    const jsPatterns = ['index.umd.js', 'index.mjs', 'index.js', 'chunk.*.mjs', 'chunk.*.js']
+
+    // Get patterns for sourcemaps
+    const mapPatterns = jsPatterns.map((pattern) => `${pattern}.map`)
+
+    // Combine all patterns
+    const allPatterns = [...jsPatterns, ...mapPatterns]
+
+    // Find files to delete
+    const filesToDelete = files.filter((file) => {
+      return allPatterns.some((pattern) => {
+        if (pattern.includes('*')) {
+          // Handle wildcard pattern
+          const regex = new RegExp('^' + pattern.replace('*', '.*') + '$')
+          return regex.test(file)
+        } else {
+          // Direct match
+          return file === pattern
+        }
+      })
+    })
+
+    // Delete each matched file
+    for (const file of filesToDelete) {
+      const filePath = path.join(directLibraryPath, file)
+      await fs.remove(filePath)
+      logger.debug(`🧹 Removed stale file: ${filePath}`)
+    }
+
+    logger.debug(`🧹 Cleaned library files in ${directLibraryPath}`)
+  } catch (error) {
+    logger.warn(`⚠️ Failed to clean library files: ${error.message}`)
+  }
 }
 
 /**
@@ -78,6 +133,12 @@ async function ensurePluginDirectories(config) {
   const directLibraryPath = getDirectLibraryPath(config)
   if (directLibraryPath) {
     await fs.ensureDir(directLibraryPath)
+  }
+
+  // Ensure chunks directory exists
+  const chunksDir = getDirectChunksOutputDir(config)
+  if (chunksDir) {
+    await fs.ensureDir(chunksDir)
   }
 
   // Ensure WordPress plugin directory exists if target is set

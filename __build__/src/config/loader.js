@@ -109,7 +109,6 @@ export function validateConfig(config) {
     'paths.dist',
     'paths.php',
     'paths.styles',
-    'paths.js',
     'paths.wordpress.plugin',
     'paths.library.assets',
     'wordpressPlugin.packageName'

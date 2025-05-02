@@ -5,6 +5,4 @@ import { Editor } from './editor'
 export { Editor }
 
 // Default export for UMD build
-export default {
-  Editor
-}
+export default Editor

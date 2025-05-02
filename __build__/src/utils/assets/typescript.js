@@ -1,204 +1,222 @@
-import { build } from 'esbuild'
+import webpack from 'webpack'
+import TerserPlugin from 'terser-webpack-plugin'
 import fs from 'fs-extra'
 import path from 'path'
 import chokidar from 'chokidar'
 import debounce from 'debounce'
 import { logger } from '../../logger/index.js'
-import { generateBanner, wrapAsUmd } from '../common/banner.js'
+import { generateBanner } from '../common/banner.js'
 import { getPackageMetadata } from '../common/version.js'
-import {
-  getLibraryDir,
-  getOutputFilePath,
-  getDirectJsOutputPath,
-  shouldCreateDistFolder
-} from '../common/paths.js'
+import { getLibraryDir } from '../common/paths.js'
 import { isDevelopment, getConfigValue } from '../../config/index.js'
 
+// Define a temporary directory for Webpack builds
+const getWebpackTempOutputDir = (config) => {
+  return path.join(config._absoluteProjectRoot, '__build__', 'temp_webpack_build')
+}
+
 /**
- * Compile TypeScript files
+ * Compile TypeScript files using Webpack
  * @param {Object} config - Project configuration
+ * @param {boolean} watchMode - Whether to run in watch mode
+ * @param {Object} liveReloadServer - Live reload server instance (optional)
  * @returns {Promise<void>}
  */
-export async function compileTypeScript(config) {
-  logger.info('🔧 Compiling TypeScript...')
+export async function compileTypeScript(config, watchMode = false, liveReloadServer = null) {
+  logger.info(`🔧 Compiling TypeScript with Webpack (${watchMode ? 'watch' : 'build'} mode)...`)
 
   const isDev = isDevelopment(config)
-  const shouldCreateDist = shouldCreateDistFolder(config)
-
-  // Get TypeScript config or use defaults
-  const tsConfig = config.ts || {}
-
-  // Get formats from config
-  const formats = isDev
-    ? [getConfigValue(config, 'ts.devFormat', 'iife')]
-    : shouldCreateDist
-      ? config.build.formats
-      : [getConfigValue(config, 'ts.devFormat', 'iife')]
+  const packageMetadata = await getPackageMetadata(config)
+  const webpackTempOutputDir = getWebpackTempOutputDir(config)
+  const finalOutputDir = getLibraryDir(config, isDev)
 
   try {
-    const packageMetadata = await getPackageMetadata(config)
+    // Get entry point from config
+    const entryPoint =
+      getConfigValue(config, 'ts.entry', null) ||
+      getConfigValue(config, 'entry', './src/js/index.js').replace(
+        new RegExp(`${getConfigValue(config, 'ts.jsExtension', '.js')}$`),
+        getConfigValue(config, 'ts.extension', '.ts')
+      )
+    const entryPointPath = path.resolve(config._absoluteProjectRoot, entryPoint)
 
-    // Process each format
-    for (const format of formats) {
-      logger.debug(`⚙️ Building TypeScript to ${format} format...`)
+    // Get tsconfig path from config or use default
+    const tsconfigPath = getConfigValue(config, 'ts.tsconfigPath', 'tsconfig.json')
+    const tsconfigFullPath = path.isAbsolute(tsconfigPath)
+      ? tsconfigPath
+      : path.join(config._absoluteProjectRoot, tsconfigPath)
 
-      // Skip non-IIFE formats if we're not creating a dist folder
-      if (format !== getConfigValue(config, 'ts.devFormat', 'iife') && !shouldCreateDist) {
-        logger.debug(`⏩ Skipping ${format} format (dist folder disabled)`)
-        continue
-      }
+    // Webpack Configuration
+    const webpackConfig = {
+      mode: isDev ? 'development' : 'production',
+      entry: entryPointPath,
+      output: {
+        path: webpackTempOutputDir,
+        filename: 'index.umd.js',
+        chunkFilename: 'chunk.[name].js',
+        library: {
+          name: config.build.umd.name,
+          type: 'umd',
+          export: 'default'
+        },
+        globalObject: 'this',
+        clean: true
+      },
+      devtool: isDev ? 'source-map' : false,
+      target: ['web', 'es2018'],
+      module: {
+        rules: [
+          {
+            test: /\.tsx?$/,
+            loader: 'ts-loader',
+            exclude: /node_modules/,
+            options: {
+              ...((await fs.pathExists(tsconfigFullPath)) ? { configFile: tsconfigFullPath } : {})
+            }
+          }
+        ]
+      },
+      resolve: {
+        extensions: ['.tsx', '.ts', '.js']
+      },
+      externals: config.build.externals || {},
+      optimization: {
+        minimize: !isDev,
+        minimizer: [
+          new TerserPlugin({
+            terserOptions: {
+              compress: {
+                drop_console: !isDev
+              },
+              format: {
+                comments: false
+              }
+            },
+            extractComments: false
+          })
+        ]
+      },
+      plugins: [
+        new webpack.BannerPlugin({
+          banner: generateBanner(packageMetadata),
+          raw: true
+        })
+      ],
+      ...getConfigValue(config, 'ts.webpackOptions', {})
+    }
 
-      // Determine output file based on format and dist folder setting
-      let outputFile
-      if (format === getConfigValue(config, 'ts.devFormat', 'iife')) {
-        // Always use direct library path for development format builds
-        outputFile = getDirectJsOutputPath(config)
-      } else {
-        // Only use dist path for other formats when dist folder is enabled
-        outputFile = getOutputFilePath(config, format)
-      }
+    const compiler = webpack(webpackConfig)
 
-      const outputDir = path.dirname(outputFile)
-
-      // Ensure output directory exists
-      await fs.ensureDir(outputDir)
-
-      // Get entry point from config
-      const entryPoint =
-        getConfigValue(config, 'ts.entry', null) ||
-        getConfigValue(config, 'entry', './src/js/index.js').replace(
-          new RegExp(`${getConfigValue(config, 'ts.jsExtension', '.js')}$`),
-          getConfigValue(config, 'ts.extension', '.ts')
-        )
-
-      // Get tsconfig path from config or use default
-      const tsconfigPath = getConfigValue(config, 'ts.tsconfigPath', 'tsconfig.json')
-      const tsconfigFullPath = path.isAbsolute(tsconfigPath)
-        ? tsconfigPath
-        : path.join(config._absoluteProjectRoot, tsconfigPath)
-
-      // Create build configuration
-      const buildConfig = {
-        entryPoints: [entryPoint],
-        outfile: outputFile,
-        bundle: true,
-        minify: !isDev,
-        sourcemap: isDev,
-        target: config.build.target,
-        format,
-        globalName:
-          format === getConfigValue(config, 'ts.devFormat', 'iife')
-            ? config.build.umd.name
-            : undefined,
-        external: Object.keys(config.build.externals || {}),
-        banner: {
-          js: generateBanner(packageMetadata)
+    const handleBuildComplete = async (err, stats) => {
+      if (err) {
+        logger.error('❌ Webpack fatal error:', err.stack || err)
+        if (err.details) {
+          logger.error(err.details)
         }
+        return
       }
 
-      // Add TypeScript specific options
-      if (await fs.pathExists(tsconfigFullPath)) {
-        buildConfig.tsconfig = tsconfigFullPath
-      }
+      const info = stats.toJson()
 
-      // Add loaders from config or use defaults
-      buildConfig.loader = getConfigValue(config, 'ts.loaders', {
-        '.ts': 'ts',
-        '.tsx': 'tsx'
-      })
-
-      // Add global definitions for development format build
-      if (format === getConfigValue(config, 'ts.devFormat', 'iife') && config.build.umd?.globals) {
-        buildConfig.globalName = config.build.umd.name
-        buildConfig.define = Object.entries(config.build.umd.globals).reduce(
-          (acc, [key, value]) => {
-            acc[key] = JSON.stringify(value)
-            return acc
-          },
-          {}
-        )
-      }
-
-      // Add any additional esbuild options from config
-      const additionalOptions = getConfigValue(config, 'ts.esbuildOptions', {})
-      Object.assign(buildConfig, additionalOptions)
-
-      // Build the TypeScript
-      await build(buildConfig)
-
-      // For development format builds, wrap the output in a UMD wrapper
-      if (format === getConfigValue(config, 'ts.devFormat', 'iife')) {
-        await wrapTsAsUmd(outputFile, config, packageMetadata)
-        logger.success(`✅ TypeScript ${format} build completed: ${outputFile}`)
-
-        // Copy to PHP libraries if we're using dist and not already built to direct path
-        if (shouldCreateDist) {
-          await copyUmdToLibrary(outputFile, config, isDev)
-        }
+      if (stats.hasErrors()) {
+        logger.error('❌ Webpack compilation failed with errors:')
+        info.errors.forEach((e) => logger.error(e.message || e))
       } else {
-        logger.success(`✅ TypeScript ${format} build completed: ${outputFile}`)
+        if (stats.hasWarnings()) {
+          logger.warn('⚠️ Webpack compilation finished with warnings:')
+          info.warnings.forEach((w) => logger.warn(w.message || w))
+        }
+        logger.success(`✅ Webpack build completed in ${stats.endTime - stats.startTime}ms`)
+
+        try {
+          await syncWebpackOutputToLibrary(webpackTempOutputDir, finalOutputDir, isDev)
+          logger.success('🎉 TypeScript compilation and sync completed')
+
+          // Notify live reload server after files are synced
+          if (liveReloadServer) {
+            const mainJsFile = path.join(finalOutputDir, 'index.umd.js')
+            liveReloadServer.notifyChange(mainJsFile)
+          }
+        } catch (syncError) {
+          logger.error('❌ Syncing Webpack output failed:', syncError)
+        }
       }
     }
 
-    logger.success('🎉 TypeScript compilation completed')
+    if (watchMode) {
+      logger.info('👀 Starting Webpack watch...')
+      return compiler.watch(
+        {
+          aggregateTimeout: getConfigValue(config, 'ts.watchAggregateTimeout', 300),
+          ignored: getConfigValue(config, 'watch.ignored', ['**/node_modules/**'])
+        },
+        handleBuildComplete
+      )
+    } else {
+      // Run single build
+      return new Promise((resolve, reject) => {
+        compiler.run((err, stats) => {
+          handleBuildComplete(err, stats)
+          compiler.close((closeErr) => {
+            if (closeErr) {
+              logger.error('❌ Error closing Webpack compiler:', closeErr)
+            }
+            if (err || stats.hasErrors()) {
+              reject(new Error('Webpack build failed.'))
+            } else {
+              resolve()
+            }
+          })
+        })
+      })
+    }
   } catch (error) {
-    logger.error('❌ TypeScript compilation failed:', error)
+    logger.error('❌ Error setting up Webpack configuration:', error)
     throw error
   }
 }
 
 /**
- * Wrap TypeScript file as UMD
- * @param {string} outputFile - Path to the output file
- * @param {Object} config - Project configuration
- * @param {Object} packageMetadata - Package metadata for banner
+ * Sync Webpack build output from temporary dir to the final library directory.
+ * @param {string} sourceDir - Temporary Webpack output directory
+ * @param {string} targetDir - Final library directory
+ * @param {boolean} isDev - Whether this is a development build (for sourcemaps)
  * @returns {Promise<void>}
  */
-async function wrapTsAsUmd(outputFile, config, packageMetadata) {
-  const content = await fs.readFile(outputFile, 'utf8')
-  const wrappedContent = wrapAsUmd(
-    content,
-    config.build.umd.name,
-    config.build.externals,
-    packageMetadata
-  )
-  await fs.writeFile(outputFile, wrappedContent)
-}
+async function syncWebpackOutputToLibrary(sourceDir, targetDir, isDev) {
+  logger.info(`📂 Syncing build output to ${targetDir}...`)
 
-/**
- * Copy UMD build to library directory
- * @param {string} outputFile - Path to the output file
- * @param {Object} config - Project configuration
- * @param {boolean} isDev - Whether this is a development build
- * @returns {Promise<void>}
- */
-async function copyUmdToLibrary(outputFile, config, isDev) {
-  // Skip if we're using direct path already
-  const directPath = getDirectJsOutputPath(config)
-  if (outputFile === directPath) {
-    return
+  try {
+    await fs.ensureDir(targetDir)
+    const items = await fs.readdir(sourceDir)
+
+    for (const item of items) {
+      const sourcePath = path.join(sourceDir, item)
+      const targetPath = path.join(targetDir, item)
+      const stats = await fs.stat(sourcePath)
+
+      if (stats.isDirectory()) {
+        await fs.copy(sourcePath, targetPath, { overwrite: true })
+      } else if (stats.isFile()) {
+        await fs.copyFile(sourcePath, targetPath)
+
+        // Copy corresponding sourcemap in development mode
+        const sourceMapPath = `${sourcePath}.map`
+        if (isDev && (await fs.pathExists(sourceMapPath))) {
+          await fs.copyFile(sourceMapPath, `${targetPath}.map`)
+        }
+      }
+    }
+
+    // Clean up the temporary directory after successful copy
+    await fs.remove(sourceDir)
+
+    logger.success(`✅ Sync complete to: ${targetDir}`)
+  } catch (error) {
+    logger.error(`❌ Failed to sync build output:`, error)
+    await fs.remove(sourceDir).catch(() => {})
+    throw error
   }
-
-  // Get library directory
-  const libraryDir = getLibraryDir(config, isDev)
-
-  // Ensure dir exists
-  await fs.ensureDir(libraryDir)
-
-  logger.debug(`📂 Copying TypeScript UMD build to library: ${libraryDir}`)
-
-  // Copy main file
-  await fs.copyFile(outputFile, path.join(libraryDir, path.basename(outputFile)))
-
-  // Copy sourcemap if in development mode
-  if (isDev) {
-    await fs.copyFile(
-      `${outputFile}.map`,
-      path.join(libraryDir, `${path.basename(outputFile)}.map`)
-    )
-  }
-
-  logger.debug(`📂 Copied TypeScript UMD build to PHP libraries`)
 }
 
 /**
@@ -208,55 +226,42 @@ async function copyUmdToLibrary(outputFile, config, isDev) {
  * @returns {Object} - Watcher instance
  */
 export async function watchTypeScript(config, liveReloadServer) {
-  // Determine TypeScript directory from config
   const tsDir = path.resolve(getConfigValue(config, 'paths.ts', config.paths.js))
-
   logger.info(`👀 Watching TypeScript files in ${path.relative(process.cwd(), tsDir)}`)
 
-  // Get file extensions to watch from config or use defaults
   const extensions = getConfigValue(config, 'ts.watchExtensions', ['.ts', '.tsx'])
+  const filePattern = `**/*.{${extensions.map((ext) => ext.substring(1)).join(',')}}`
 
-  // Create pattern for watching specific extensions
-  const extensionPattern =
-    extensions.length > 1 ? `**/*{${extensions.join(',')}}` : `**/*${extensions[0]}`
-
-  // Create debounced build function
   const debouncedBuild = debounce(
     async (filePath) => {
       logger.info(`🔄 TypeScript file changed: ${path.relative(process.cwd(), filePath)}`)
 
       try {
-        await compileTypeScript(config)
-
-        // Notify live reload server
-        if (liveReloadServer) {
-          // Use direct path for notification
-          const jsFile = getDirectJsOutputPath(config)
-          liveReloadServer.notifyChange(jsFile)
-        }
+        await compileTypeScript(config, false, liveReloadServer)
       } catch (error) {
-        logger.error('❌ Failed to rebuild TypeScript files:', error)
+        // Error is already logged in compileTypeScript
       }
     },
     getConfigValue(config, 'ts.debounceTime', 300)
   )
 
-  // Setup watcher with configurable options
   const watcherOptions = {
-    ignored: getConfigValue(config, 'watch.ignored', ['**/node_modules/**', '**/dist/**']),
+    ignored: getConfigValue(config, 'watch.ignored', [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/__build__/temp_webpack_build/**'
+    ]),
     persistent: true,
     ignoreInitial: true,
-    ignorePermissionErrors: getConfigValue(config, 'ts.ignorePermissionErrors', true)
+    ignorePermissionErrors: getConfigValue(config, 'ts.ignorePermissionErrors', true),
+    ...getConfigValue(config, 'ts.watcherOptions', {})
   }
 
-  // Add any additional watcher options from config
-  const additionalOptions = getConfigValue(config, 'ts.watcherOptions', {})
-  Object.assign(watcherOptions, additionalOptions)
-
-  // Create the watcher
-  const watcher = chokidar.watch([path.join(tsDir, extensionPattern)], watcherOptions)
+  const watcher = chokidar.watch(tsDir, watcherOptions)
 
   watcher.on('change', debouncedBuild)
+  watcher.on('add', debouncedBuild)
+  watcher.on('unlink', debouncedBuild)
   watcher.on('error', (error) => {
     logger.error(`❌ TypeScript watcher error:`, error)
   })

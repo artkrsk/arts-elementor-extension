@@ -76,42 +76,39 @@ export function generateUmdFooter(globalName) {
  * @returns {string} - Banner text
  */
 export function generateBanner(options = {}) {
-  const name = options.name || 'Unknown Project'
-  const version = options.version || '0.0.0'
-  const date = new Date().toISOString().split('T')[0]
-  const author = options.author || ''
-  const license = options.license || ''
-  const homepage = options.homepage || ''
-  const repository = options.repository || ''
-  const year = new Date().getFullYear()
-
-  let banner = `/*!
- * ${name} v${version}
-`
-
-  // Use current year only for copyright
-  banner += ` * Copyright © ${year}\n`
-
-  if (author) {
-    banner += ` * Author: ${author}\n`
+  // Default values
+  options = {
+    name: 'Unknown Project',
+    version: '1.0.0',
+    author: '',
+    license: '',
+    homepage: '',
+    copyright: '',
+    repository: '',
+    ...options
   }
 
-  if (license) {
-    banner += ` * License: ${license}\n`
-  }
+  const currentYear = new Date().getFullYear()
 
-  if (homepage) {
-    banner += ` * Website: ${homepage}\n`
-  }
+  // Generate the copyright line
+  const copyrightLine =
+    options.copyright ||
+    (options.author ? `© ${currentYear} ${options.author}` : `© ${currentYear}`)
 
-  if (repository) {
-    banner += ` * Repository: ${repository}\n`
-  }
+  // Build the banner
+  const bannerLines = [
+    `/*!`,
+    ` * ${options.name} v${options.version}`,
+    options.description ? ` * ${options.description}` : '',
+    options.homepage ? ` * ${options.homepage}` : '',
+    options.repository ? ` * ${options.repository}` : '',
+    ` * ${copyrightLine}`,
+    options.license ? ` * License: ${options.license}` : '',
+    ` */`
+  ]
 
-  banner += ` * Generated on: ${date}\n`
-  banner += ' */\n'
-
-  return banner
+  // Filter out empty lines and join
+  return bannerLines.filter((line) => line !== '').join('\n')
 }
 
 /**
@@ -153,29 +150,26 @@ export function generatePackageBanner(packageInfo) {
 }
 
 /**
- * Generate a complete UMD wrapper for a specific module
- * @param {string} content - The module content to wrap
+ * Wrap content in a UMD wrapper
+ * @param {string} content - The code content to wrap
  * @param {string} globalName - The global variable name for the library
  * @param {Object} externals - Map of external package names to global variable names
- * @param {Object} packageInfo - Package information for the banner
- * @returns {string} The wrapped module content
+ * @param {Object} packageMetadata - Package metadata for banner
+ * @returns {string} - Wrapped content
  */
-export function wrapAsUmd(content, globalName, externals = {}, packageInfo = null) {
-  const banner = packageInfo ? generatePackageBanner(packageInfo) + '\n' : ''
+export function wrapAsUmd(content, globalName, externals = {}, packageMetadata = {}) {
+  const banner = generateBanner(packageMetadata)
+
+  // Get UMD wrapper
   const umdBanner = generateUmdBanner(globalName, externals)
   const umdFooter = generateUmdFooter(globalName)
 
-  // Remove any existing banner in the content to prevent duplication
-  const bannerPattern = /\/\*[!*][\s\S]*?\*\/\s*/
-  const cleanContent = content.replace(bannerPattern, '')
-
-  return banner + umdBanner + cleanContent + umdFooter
+  return `${banner}\n${umdBanner}\n${content}\n${umdFooter}`
 }
 
 export default {
   generateUmdBanner,
   generateUmdFooter,
   generateBanner,
-  generatePackageBanner,
   wrapAsUmd
 }

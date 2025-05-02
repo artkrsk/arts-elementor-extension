@@ -147,7 +147,7 @@ export default {
 
   // Build configuration
   build: {
-    formats: ['cjs', 'iife'],
+    formats: ['iife'],
     target: 'es2018',
     sourcemap: false,
     createDistFolder: false, // Option to disable dist folder creation

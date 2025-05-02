@@ -16,7 +16,7 @@
   },
   "require": {
     "php": ">=7.4",
-    "arts/utilities": "*"
+    "arts/utilities": "@dev"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.6",
