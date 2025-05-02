@@ -71,7 +71,6 @@ next-env.d.ts
 *.temp
 
 # WordPress specific
-/src/php/libraries/*
 /src/wordpress-plugin/languages/*
 
 # Project specific
