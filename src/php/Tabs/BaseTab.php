@@ -121,7 +121,12 @@ abstract class BaseTab extends Tab_Base {
 				$settings = $this->parent->get_active_settings( $this->parent->get_settings(), $current_tab_controls );
 
 				foreach ( $current_tab_controls as $control ) {
-					if ( ! isset( $control['name'] ) || ! isset( $settings[ $control['name'] ] ) || ! isset( $settings[ $control['theme_mod_available'] ] ) || ! $settings[ $control['theme_mod_available'] ] ) {
+					// Check if necessary keys exist and theme_mod_available is true
+					if ( ! isset( $control['name'] ) ||
+						! isset( $settings[ $control['name'] ] ) ||
+						! isset( $control['theme_mod_available'] ) ||
+						! isset( $settings[ $control['theme_mod_available'] ] ) ||
+						! $settings[ $control['theme_mod_available'] ] ) {
 						continue;
 					}
 
