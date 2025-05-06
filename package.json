@@ -1,7 +1,7 @@
 {
   "name": "@arts/elementor-extension",
   "author": "Artem Semkin",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "license": "MIT",
   "description": "Library for creating Elementor extensions, widgets, skins, tabs, and more in declarative way",
