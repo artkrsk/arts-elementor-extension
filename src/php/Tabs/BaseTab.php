@@ -102,7 +102,7 @@ abstract class BaseTab extends Tab_Base {
 	}
 
 	/**
-	 * Handle the save action for Elementor settings and syncs the data to the WP Customizer.
+	 * Handle the save action for Elementor settings and syncs the data to the database.
 	 * This method is called when the user clicks the "Save & Close" button in the Elementor settings.
 	 *
 	 * @param array $data The data to be saved.
@@ -121,31 +121,73 @@ abstract class BaseTab extends Tab_Base {
 				$settings = $this->parent->get_active_settings( $this->parent->get_settings(), $current_tab_controls );
 
 				foreach ( $current_tab_controls as $control ) {
-					// Check if necessary keys exist and theme_mod_available is true
-					if ( ! isset( $control['name'] ) ||
-						! isset( $settings[ $control['name'] ] ) ||
-						! isset( $control['theme_mod_available'] ) ||
-						! isset( $settings[ $control['theme_mod_available'] ] ) ||
-						! $settings[ $control['theme_mod_available'] ] ) {
+					$save_method = $this->get_control_save_method( $control );
+
+					if ( ! $save_method || ! isset( $control['name'] ) ) {
 						continue;
 					}
 
-					if ( isset( $data['settings'][ $control['name'] ] ) ) {
-						$value = $data['settings'][ $control['name'] ];
-					} elseif ( isset( $control['default'] ) ) {
-						$value = $control['default'];
-					} else {
-						$value = '';
-					}
-
+					$value = $this->get_control_value( $data, $control );
 					$value = $this->filter_value_elementor_to_customizer( $value );
 
-					set_theme_mod( $control['name'], $value );
+					$this->save_control_value( $control['name'], $value, $save_method );
 				}
 			}
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Get the method to save the control value.
+	 *
+	 * @param array $control The control data.
+	 *
+	 * @return string|false The save method ("theme_mod" or "option") or false if no saving needed.
+	 */
+	private function get_control_save_method( $control ) {
+		if ( ! isset( $control['save_db'] ) ) {
+			return false;
+		}
+
+		if ( $control['save_db'] === 'theme_mod' || $control['save_db'] === 'option' ) {
+			return $control['save_db'];
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the value for a control.
+	 *
+	 * @param array $data    The data containing settings.
+	 * @param array $control The control data.
+	 *
+	 * @return mixed The control value.
+	 */
+	private function get_control_value( $data, $control ) {
+		if ( isset( $data['settings'][ $control['name'] ] ) ) {
+			return $data['settings'][ $control['name'] ];
+		} elseif ( isset( $control['default'] ) ) {
+			return $control['default'];
+		} else {
+			return '';
+		}
+	}
+
+	/**
+	 * Save the control value to the database.
+	 *
+	 * @param string $key         The control name/key.
+	 * @param mixed  $value       The value to save.
+	 * @param string $save_method The method to use for saving ("theme_mod" or "option").
+	 */
+	private function save_control_value( $key, $value, $save_method ) {
+		if ( $save_method === 'theme_mod' ) {
+			set_theme_mod( $key, $value );
+		} elseif ( $save_method === 'option' ) {
+			update_option( $key, $value );
+		}
 	}
 
 	/**

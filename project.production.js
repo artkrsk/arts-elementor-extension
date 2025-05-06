@@ -13,7 +13,7 @@ export default function (baseConfig) {
   // Production-specific settings
   config.build.sourcemap = false
   config.build.minify = true
-  config.build.createDistFolder = false
+  config.build.createDistFolder = true
 
   // Configure Sass for production
   config.sass.options.sourceMap = false

@@ -22,7 +22,7 @@ class Editor extends BaseManager {
 		if ( ! empty( $live_settings ) || ! empty( $inline_js ) ) {
 			wp_enqueue_script(
 				$script_id,
-				$this->args['dir_url'] . '/libraries/arts-elementor-extension/index.umd.js',
+				$this->args['dir_url'] . 'libraries/arts-elementor-extension/index.umd.js',
 				array( 'elementor-editor' ),
 				false,
 				true

@@ -1,8 +1,6 @@
-// Main entry point for the Arts Elementor Extension
-import { Editor } from './editor'
+import LiveSettings from './editor/LiveSettings.js'
 
-// Export all modules
-export { Editor }
-
-// Default export for UMD build
-export default Editor
+window.addEventListener('elementor/init', () => {
+  // Initialize the LiveSettings with the elementor instance
+  LiveSettings.init(window.elementor)
+})

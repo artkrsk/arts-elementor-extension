@@ -26,12 +26,29 @@
  */
 
 /**
+ * @typedef {Object} ElementorDataRoute
+ * @property {function(string): Promise<any>} get - Get data from a route
+ */
+
+/**
+ * @typedef {Object} ElementorRoutesObject
+ * @property {string} panel - Panel route segment
+ * @property {function(string): boolean} search - Search route for a pattern
+ */
+
+/**
  * @typedef {Object} ElementorE
  * @property {ElementorCommands} commands - Elementor commands
  * @property {ElementorHooks} hooks - Elementor hooks
  * @property {ElementorModules} modules - Elementor modules
  * @property {Object} components - Elementor components
  * @property {function(any): void} components.register - Register a component
+ * @property {function(string, any): Promise<any>} run - Run an Elementor command
+ * @property {function(string): void} route - Navigate to a route
+ * @property {Object} routes - Elementor routes
+ * @property {ElementorRoutesObject} routes.current - Current route
+ * @property {Object} data - Elementor data
+ * @property {function(string): Promise<any>} data.get - Get data route
  */
 
 /**
@@ -50,6 +67,16 @@
  */
 
 /**
+ * @typedef {Object} ElementorElements
+ * @property {JQuery<HTMLElement>} $body - Body element
+ */
+
+/**
+ * @typedef {Object} ElementorPanelView
+ * @property {function(): Object} getCurrentPageView - Get current page view
+ */
+
+/**
  * @typedef {Object} Elementor
  * @property {ElementorModulesControls} modules - Elementor modules
  * @property {function(string, any): void} addControlView - Add a control view
@@ -59,6 +86,10 @@
  * @property {function(string, Object): void} ajax.addRequest - Add an AJAX request
  * @property {Object} breakpoints - Breakpoint utilities
  * @property {function(Object): Array<string>} breakpoints.getActiveBreakpointsList - Get active breakpoints list
+ * @property {function(): ElementorPanelView} getPanelView - Get the panel view
+ * @property {function(string, Function): void} once - Add a one-time event listener
+ * @property {Object} settings - Elementor settings
+ * @property {Object} settings.page - Page settings
  */
 
 /**
@@ -69,6 +100,7 @@
 /**
  * @typedef {Object} ElementorCommon
  * @property {ElementorCommonDialogs} dialogsManager - Dialog manager
+ * @property {ElementorElements} elements - Common elements
  */
 
 /**
@@ -98,6 +130,9 @@
  * @property {function(BackboneView): void} onChildviewRender - Handles child view render
  * @property {function(): Object} templateHelpers - Returns template helpers
  * @property {function(): Object} getDefaults - Returns default values
+ * @property {function(string): void} activateSection - Activate a section
+ * @property {function(): void} openActiveSection - Open the active section
+ * @property {function(): BackboneView} getCurrentPageView - Get current page view
  */
 
 // Declare globals
@@ -119,4 +154,4 @@ var Backbone = window.Backbone || {}
 /** @type {any} */
 var _ = window._ || {}
 
-var ArtsFluidDSStrings = window.ArtsFluidDSStrings || {}
+var artsElementorExtensionEditorLiveSettings = window.artsElementorExtensionEditorLiveSettings || {}

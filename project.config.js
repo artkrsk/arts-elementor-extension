@@ -29,7 +29,9 @@ export default {
     library: {
       base: 'libraries',
       name: 'arts-elementor-extension',
-      assets: 'src/php/libraries/arts-elementor-extension'
+      // assets: 'src/php/libraries/arts-elementor-extension'
+      assets:
+        '/Users/art/Projects/Framework/packages/ArtsSmoothScrolling/vendor/arts/elementor-extension/src/php/libraries/arts-elementor-extension'
     },
     aliases: {
       '@': './src/js',
@@ -55,8 +57,8 @@ export default {
     port: 3000,
     host: 'localhost',
     https: {
-      key: '/Users/art/.localhost-ssl/fluid-ds.local+4-key.pem',
-      cert: '/Users/art/.localhost-ssl/fluid-ds.local+4.pem'
+      key: '/Users/art/.localhost-ssl/smooth-scrolling.local+4-key.pem',
+      cert: '/Users/art/.localhost-ssl/smooth-scrolling.local+4.pem'
     },
     injectChanges: true,
     reloadDebounce: 500,
@@ -147,7 +149,7 @@ export default {
 
   // Build configuration
   build: {
-    formats: ['iife'],
+    formats: ['esm', 'iife'],
     target: 'es2018',
     sourcemap: false,
     createDistFolder: false, // Option to disable dist folder creation

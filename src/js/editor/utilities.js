@@ -1,9 +1,4 @@
 /**
- * Elementor Editor Utilities
- * Provides utility functions for converting Elementor settings
- */
-
-/**
  * Helper function to process complex nested values
  * @param {Object|string} valueMapping - The value mapping object or string
  * @param {Object} settings - The Elementor settings object

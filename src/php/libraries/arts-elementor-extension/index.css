@@ -1,8 +1,10 @@
 /*!
- * Arts Elementor Extension v1.0.0
+ * Arts Elementor Extension v1.0.2
  * https://artemsemkin.com
  * https://github.com/artkrsk/arts-elementor-extension
  * © 2025 Artem Semkin
  * License: MIT
  */
-body{min-width:320px}
+body {
+  min-width: 320px;
+}

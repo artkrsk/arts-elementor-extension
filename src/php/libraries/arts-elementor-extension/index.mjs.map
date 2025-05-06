@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../js/index.js"],
+  "sourcesContent": ["// // Main entry point for the Arts Elementor Extension\n// import { Editor } from './editor'\n\n// // Export all modules\n// export { Editor }\n\n// // Default export for UMD build\n// export default Editor\nconsole.log('test test')\n\n;(function (elementor) {\n  elementor.once('preview:loaded', () => {\n    console.log('Elementor preview loaded')\n  })\n})(elementor)\n"],
+  "mappings": ";AAQA,QAAQ,IAAI,WAAW;AAAA,CAErB,SAAUA,YAAW;AACrB,EAAAA,WAAU,KAAK,kBAAkB,MAAM;AACrC,YAAQ,IAAI,0BAA0B;AAAA,EACxC,CAAC;AACH,GAAG,SAAS;",
+  "names": ["elementor"]
+}
