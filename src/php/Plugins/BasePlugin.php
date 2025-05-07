@@ -218,6 +218,7 @@ abstract class BasePlugin {
 	public function run() {
 		$this->add_filters();
 		$this->add_actions();
+		\Arts\ElementorExtension\Plugin::instance();
 
 		return $this;
 	}
