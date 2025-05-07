@@ -65,7 +65,7 @@ const convertSettings = (settings, settingsMap) => {
       }
     }
     // Complex mapping with condition and value
-    else if (typeof elementorMapping === 'object') {
+    else if (typeof elementorMapping === 'object' && elementorMapping !== null) {
       // Check if this is a conditional mapping
       if (elementorMapping.condition) {
         // Set property to false if condition is not met
@@ -91,9 +91,14 @@ const convertSettings = (settings, settingsMap) => {
           result[jsKey] = value
         }
       }
-      // Handle complex nested object
-      else if (typeof elementorMapping.value === 'object') {
+      // Handle complex nested object in value
+      else if (typeof elementorMapping.value === 'object' && elementorMapping.value !== null) {
         result[jsKey] = processComplexValue(elementorMapping.value, settings)
+      }
+      // Handle nested object mapping (no value/condition property)
+      else if (!('value' in elementorMapping) && !('condition' in elementorMapping)) {
+        // Recursively process nested mapping
+        result[jsKey] = convertSettings(settings, elementorMapping)
       }
     }
   })
