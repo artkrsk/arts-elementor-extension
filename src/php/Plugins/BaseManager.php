@@ -42,6 +42,7 @@ abstract class BaseManager {
 	 */
 	protected $managers;
 
+	protected $plugin_dir_path;
 	protected $plugin_dir_url;
 	protected $plugin_ajax_url;
 
@@ -54,6 +55,10 @@ abstract class BaseManager {
 	 */
 	public function __construct( $args = array(), $config = array(), $strings = array() ) {
 		$this->args = $args;
+
+		if ( isset( $args['dir_path'] ) ) {
+			$this->plugin_dir_path = $args['dir_path'];
+		}
 
 		if ( isset( $args['dir_url'] ) ) {
 			$this->plugin_dir_url = $args['dir_url'];

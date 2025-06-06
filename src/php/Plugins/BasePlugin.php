@@ -130,6 +130,7 @@ abstract class BasePlugin {
 	private function init_properties() {
 		$this->managers   = new \stdClass();
 		$this->args       = array(
+			'dir_path' => $this->get_plugin_dir_path(),
 			'dir_url'  => $this->get_plugin_dir_url(),
 			'ajax_url' => self::$ajax_url,
 		);
@@ -144,6 +145,11 @@ abstract class BasePlugin {
 	abstract protected function get_default_strings();
 	abstract protected function get_managers_classes();
 	abstract protected function get_default_run_action();
+
+	protected function get_plugin_dir_path() {
+		$reflection = new \ReflectionClass( static::class );
+		return plugin_dir_path( $reflection->getFileName() ); // Get full directory path
+	}
 
 	/**
 	 * Get the URL of the plugin directory.
