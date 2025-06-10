@@ -189,6 +189,8 @@ class Plugin {
 
 		add_action( 'elementor/editor/after_enqueue_scripts', array( self::$managers->editor, 'enqueue_live_settings_script' ) );
 
+		add_action( 'wp_enqueue_scripts', array( self::$managers->editor, 'enqueue_widget_handler_script' ) );
+
 		return self::$instance;
 	}
 

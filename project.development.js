@@ -23,6 +23,10 @@ export default function (baseConfig) {
   config.liveReload.logLevel = 'debug'
   config.liveReload.reloadOnRestart = true
 
+  config.wordpress.targets = [
+    '/Users/art/Projects/Trigger/DEV/src/wp/plugin/vendor/arts/elementor-extension/src/php'
+  ]
+
   // Configure WordPress plugin target
   config.wordpressPlugin.target = null
   config.wordpressPlugin.debug = true
