@@ -14,6 +14,7 @@
 
         const event = new CustomEvent('arts/elementor-base-widget/widget/init', {
           detail: {
+            instance: this,
             element: this.$element.get(0)
           }
         })
@@ -26,6 +27,7 @@
 
         const event = new CustomEvent('arts/elementor-base-widget/widget/destroy', {
           detail: {
+            instance: this,
             element: this.$element.get(0)
           }
         })
