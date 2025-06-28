@@ -1,3 +1,5 @@
+import { debounce } from '@arts/utilities'
+
 /**
  * Elementor Editor Live Settings
  * Handles live settings changes in the Elementor editor
@@ -13,6 +15,8 @@ class LiveSettings {
   constructor() {
     this.elementorInstance = null
     this.previewWindow = null
+    this.resizeObserver = null
+    this.debouncedResizeEmit = null
   }
 
   /**
@@ -34,7 +38,8 @@ class LiveSettings {
     return {
       updatePreview: this.updatePreview.bind(this),
       reloadPreview: this.reloadPreview.bind(this),
-      emitEvent: this.emitEvent.bind(this)
+      emitEvent: this.emitEvent.bind(this),
+      disconnect: this.disconnect.bind(this)
     }
   }
 
@@ -44,6 +49,48 @@ class LiveSettings {
    */
   setWindow() {
     this.previewWindow = this.elementorInstance.$preview.get(0).contentWindow
+    this.initResizeObserver()
+  }
+
+  /**
+   * Initializes the ResizeObserver to watch for preview window size changes
+   * @private
+   */
+  initResizeObserver() {
+    if (!this.previewWindow) return
+
+    // Create debounced function for resize events
+    this.debouncedResizeEmit = debounce((entries) => {
+      const entry = entries[0]
+      if (entry) {
+        const { width, height } = entry.contentRect
+        this.emitEvent('arts/elementor_extension/editor/preview_resized', {
+          width,
+          height,
+          contentRect: entry.contentRect
+        })
+      }
+    }, 250) // 250ms debounce delay
+
+    // Create ResizeObserver
+    this.resizeObserver = new ResizeObserver(this.debouncedResizeEmit)
+
+    // Observe the preview window's document body
+    if (this.previewWindow.document && this.previewWindow.document.body) {
+      this.resizeObserver.observe(this.previewWindow.document.body)
+    }
+  }
+
+  /**
+   * Disconnects the ResizeObserver
+   * @private
+   */
+  disconnectResizeObserver() {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect()
+      this.resizeObserver = null
+    }
+    this.debouncedResizeEmit = null
   }
 
   /**
@@ -177,6 +224,14 @@ class LiveSettings {
 
       this.previewWindow.dispatchEvent(event)
     }
+  }
+
+  /**
+   * Disconnects all observers and cleans up resources
+   * @public
+   */
+  disconnect() {
+    this.disconnectResizeObserver()
   }
 }
 
