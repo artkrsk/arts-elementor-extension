@@ -30,7 +30,6 @@ export default {
       base: 'libraries',
       name: 'arts-elementor-extension',
       assets: 'src/php/libraries/arts-elementor-extension'
-      // assets: '/Users/art/Projects/Framework/packages/ArtsSmoothScrolling/vendor/arts/elementor-extension/src/php/libraries/arts-elementor-extension'
     },
     aliases: {
       '@': './src/js',

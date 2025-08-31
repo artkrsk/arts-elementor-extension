@@ -70,7 +70,7 @@ class LiveSettings {
           contentRect: entry.contentRect
         })
       }
-    }, 250) // 250ms debounce delay
+    }, 300)
 
     // Create ResizeObserver
     this.resizeObserver = new ResizeObserver(this.debouncedResizeEmit)
@@ -78,6 +78,12 @@ class LiveSettings {
     // Observe the preview window's document body
     if (this.previewWindow.document && this.previewWindow.document.body) {
       this.resizeObserver.observe(this.previewWindow.document.body)
+    }
+
+    const elementorPreview = document.getElementById('elementor-preview')
+
+    if (elementorPreview) {
+      this.resizeObserver.observe(elementorPreview)
     }
   }
 

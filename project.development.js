@@ -1,5 +1,5 @@
 /**
- * Development-specific configuration overrides for `@arts/fluid-design-system`
+ * Development-specific configuration overrides for `@arts/elementor-extension`
  * @param {Object} baseConfig - The base configuration object
  * @returns {Object} - Modified configuration for development
  */
