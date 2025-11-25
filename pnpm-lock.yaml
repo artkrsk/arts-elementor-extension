@@ -93,7 +93,7 @@ packages:
 
   '@arts/utilities@file:../ArtsUtilities':
     resolution: {directory: ../ArtsUtilities, type: directory}
-    engines: {node: '>=23.0.0'}
+    engines: {node: '>=24.0.0'}
 
   '@asamuzakjp/css-color@3.1.4':
     resolution: {integrity: sha512-SeuBV4rnjpFNjI8HSgKUwteuFdkHwkboq31HWzznuqgySQir+jSTczoWVVL4jvOjKjuH80fMDG0Fvg1Sb+OJsA==}
@@ -2820,7 +2820,9 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@arts/utilities@file:../ArtsUtilities': {}
+  '@arts/utilities@file:../ArtsUtilities':
+    dependencies:
+      '@arts/elementor-types': link:../elementor-types
 
   '@asamuzakjp/css-color@3.1.4':
     dependencies:
