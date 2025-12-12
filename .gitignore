@@ -17,6 +17,7 @@ Thumbs.db
 *.sln
 *.sw?
 *.code-workspace
+.claude
 
 # Build output
 /dist
