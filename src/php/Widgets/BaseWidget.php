@@ -134,6 +134,27 @@ abstract class BaseWidget extends Widget_Base {
 	}
 
 	/**
+	 * Get current skin ID.
+	 *
+	 * @return string The current skin ID.
+	 */
+	public function get_current_skin_id() {
+		return parent::get_current_skin_id();
+	}
+
+	/**
+	 * Get repeater setting key.
+	 *
+	 * @param string $setting_key  The setting key.
+	 * @param string $repeater_key The repeater key.
+	 * @param int    $index        The item index.
+	 * @return string The unique setting key.
+	 */
+	public function get_repeater_setting_key( $setting_key, $repeater_key, $index ) {
+		return parent::get_repeater_setting_key( $setting_key, $repeater_key, $index );
+	}
+
+	/**
 	 * Whether the element returns dynamic content.
 	 * Set to determine whether to cache the element output or not.
 	 *

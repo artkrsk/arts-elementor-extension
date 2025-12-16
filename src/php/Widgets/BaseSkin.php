@@ -17,6 +17,15 @@ abstract class BaseSkin extends Skin_Base {
 	 */
 	protected $parent;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param \Elementor\Widget_Base $parent The parent widget.
+	 */
+	public function __construct( \Elementor\Widget_Base $parent ) {
+		parent::__construct( $parent );
+	}
+
 	abstract public function render_skin();
 
 	/**
