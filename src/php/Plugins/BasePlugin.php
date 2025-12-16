@@ -219,7 +219,7 @@ abstract class BasePlugin {
 	/**
 	 * Execute the plugin with the provided arguments.
 	 *
-	 * @return Plugin Returns the current instance for method chaining.
+	 * @return static Returns the current instance for method chaining.
 	 */
 	public function run() {
 		$this->add_filters();
@@ -232,7 +232,7 @@ abstract class BasePlugin {
 	/**
 	 * Add options for the plugin.
 	 *
-	 * @return Plugin Returns the current instance for method chaining.
+	 * @return static Returns the current instance for method chaining.
 	 */
 	protected function add_options() {
 		$this->options = array();
@@ -252,7 +252,7 @@ abstract class BasePlugin {
 	/**
 	 * Add WordPress actions for the plugin.
 	 *
-	 * @return Plugin Returns the current instance for method chaining.
+	 * @return static Returns the current instance for method chaining.
 	 */
 	protected function add_actions() {
 		return $this;
@@ -261,7 +261,7 @@ abstract class BasePlugin {
 	/**
 	 * Add WordPress filters for the plugin.
 	 *
-	 * @return Plugin Returns the current instance for method chaining.
+	 * @return static Returns the current instance for method chaining.
 	 */
 	protected function add_filters() {
 		return $this;
@@ -278,7 +278,7 @@ abstract class BasePlugin {
 	/**
 	 * Add manager instances to the managers property.
 	 *
-	 * @return Plugin Returns the current instance for method chaining.
+	 * @return static Returns the current instance for method chaining.
 	 */
 	private function add_managers() {
 		$manager_classes = $this->get_managers_classes();
@@ -297,7 +297,7 @@ abstract class BasePlugin {
 	/**
 	 * Initialize all manager classes by calling their init method if it exists.
 	 *
-	 * @return Plugin Returns the current instance for method chaining.
+	 * @return static Returns the current instance for method chaining.
 	 */
 	private function init_managers() {
 		$managers = $this->managers;
