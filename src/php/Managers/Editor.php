@@ -15,16 +15,20 @@ use Arts\Utilities\Utilities;
  */
 class Editor extends BaseManager {
 	public function enqueue_live_settings_script(): void {
-		$script_id     = 'arts-elementor-extension-editor-live-settings';
+		$script_id = 'arts-elementor-extension-editor-live-settings';
+		/** @var array<int, string> $live_settings */
 		$live_settings = apply_filters( 'arts/elementor_extension/editor/live_settings', array() );
 
 		if ( empty( $live_settings ) ) {
 			return;
 		}
 
+		$dir_url = $this->args['dir_url'] ?? '';
+		assert( is_string( $dir_url ) );
+
 		wp_enqueue_script(
 			$script_id,
-			$this->args['dir_url'] . 'libraries/arts-elementor-extension/index.umd.js',
+			$dir_url . 'libraries/arts-elementor-extension/index.umd.js',
 			array( 'elementor-editor' ),
 			false,
 			true
@@ -46,9 +50,12 @@ class Editor extends BaseManager {
 		$inline_js = $this->managers->widgets->get_elementor_editor_js_string();
 
 		if ( ! empty( $inline_js ) ) {
+			$dir_url = $this->args['dir_url'] ?? '';
+			assert( is_string( $dir_url ) );
+
 			wp_enqueue_script(
 				$script_id,
-				$this->args['dir_url'] . 'libraries/arts-elementor-widget-handler/index.umd.js',
+				$dir_url . 'libraries/arts-elementor-widget-handler/index.umd.js',
 				array(),
 				false,
 				true

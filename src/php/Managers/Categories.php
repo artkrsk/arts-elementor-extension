@@ -17,12 +17,18 @@ class Categories extends BaseManager {
 	/**
 	 * The categories for the widgets.
 	 *
-	 * @var array<string, mixed>
+	 * @var array<int, array{name: string, title: string, icon?: string}>
 	 */
 	public $categories = array();
 
 	protected function apply_filters(): void {
-		$this->categories = apply_filters( 'arts/elementor_extension/widgets/categories', $this->categories );
+		/**
+		 * @var array<int, array{name: string, title: string, icon?: string}> $filtered
+		 */
+		$filtered = apply_filters( 'arts/elementor_extension/widgets/categories', $this->categories );
+		if ( is_array( $filtered ) ) {
+			$this->categories = $filtered;
+		}
 	}
 
 	/**
