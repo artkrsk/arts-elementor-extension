@@ -1,0 +1,20 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+	level: 6
+
+	paths:
+		- src/php
+
+	bootstrapFiles:
+		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
+		- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+		- vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
+		- vendor/arts/elementor-stubs/elementor-stubs.php
+
+	excludePaths:
+		analyse:
+			- __tests__/*
+
+	treatPhpDocTypesAsCertain: false

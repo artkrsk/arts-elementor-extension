@@ -6,8 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use \Elementor\Skin_Base;
-use \Arts\ElementorExtension\Widgets\BaseWidget;
+use Elementor\Skin_Base;
+use Arts\ElementorExtension\Widgets\BaseWidget;
 
 abstract class BaseSkin extends Skin_Base {
 	/**

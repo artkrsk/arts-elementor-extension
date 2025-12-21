@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use \Elementor\Widgets_Manager;
+use Elementor\Widgets_Manager;
 
 /**
  * Class Widgets

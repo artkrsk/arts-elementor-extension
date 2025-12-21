@@ -6,10 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use \Arts\ElementorExtension\Managers\Categories;
-use \Arts\ElementorExtension\Managers\Editor;
-use \Arts\ElementorExtension\Managers\Tabs;
-use \Arts\ElementorExtension\Managers\Widgets;
+use Arts\ElementorExtension\Managers\Categories;
+use Arts\ElementorExtension\Managers\Editor;
+use Arts\ElementorExtension\Managers\Tabs;
+use Arts\ElementorExtension\Managers\Widgets;
 
 /**
  * Class Plugin

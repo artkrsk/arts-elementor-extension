@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use \Arts\Utilities\Utilities;
+use Arts\Utilities\Utilities;
 
 /**
  * Class Editor

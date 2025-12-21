@@ -66,9 +66,6 @@ trait Preloads {
 	 * @return array The preload assets map.
 	 */
 	protected function get_preload_assets_map() {
-		/**
-		 * @var \Arts\ElementorExtension\Widgets\BaseSkinComponent $skin
-		 */
 		$skin = $this->get_current_skin();
 		$map  = array();
 

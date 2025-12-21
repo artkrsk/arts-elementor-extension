@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<ruleset name="ArtsElementorExtension">
+	<description>WordPress Coding Standards for Arts Elementor Extension Library</description>
+
+	<!-- Files to check -->
+	<file>src/php</file>
+
+	<!-- Exclude patterns -->
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+
+	<!-- Use WordPress Core standards -->
+	<rule ref="WordPress-Core">
+		<!-- Modern PHP: Allow short array syntax -->
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+		<!-- Allow modern file naming (Widget.php vs class-widget.php) -->
+		<exclude name="WordPress.Files.FileName"/>
+		<!-- Skip Yoda conditions (readability preference) -->
+		<exclude name="WordPress.PHP.YodaConditions"/>
+		<!-- Allow / as hook namespace separator (intentional design) -->
+		<exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores"/>
+	</rule>
+
+	<!-- Skip WordPress-Docs: most functions are self-explanatory utility methods -->
+	<!-- Doc comments add noise without value for straightforward utility functions -->
+
+	<!-- Reserved keyword parameter names (inherited from WP core APIs) -->
+	<rule ref="Universal.NamingConventions.NoReservedKeywordParameterNames">
+		<exclude-pattern>*</exclude-pattern>
+	</rule>
+
+	<!-- Minimum versions -->
+	<config name="minimum_supported_wp_version" value="6.0"/>
+	<config name="testVersion" value="7.2-"/>
+
+	<!-- Show progress and use colors -->
+	<arg value="ps"/>
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
+	<arg name="parallel" value="8"/>
+</ruleset>

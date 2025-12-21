@@ -6,9 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-use \Elementor\Core\Kits\Documents\Tabs\Tab_Base;
-use \Elementor\Core\Base\Document;
-use \Elementor\Controls_Manager;
+use Elementor\Core\Kits\Documents\Tabs\Tab_Base;
+use Elementor\Core\Base\Document;
+use Elementor\Controls_Manager;
 
 abstract class BaseTab extends Tab_Base {
 	/**
@@ -268,8 +268,7 @@ abstract class BaseTab extends Tab_Base {
 				'raw'             => sprintf(
 					'%1$s <a href="javascript: $e.run( \'document/save/default\' ).then(() => { $e.run( \'preview/reload\' ) });">%2$s</a>',
 					esc_html__( 'To preview changes please click', 'arts-elementor-extension' ),
-					esc_html__( 'Save and Reload', 'arts-elementor-extension' ),
-					'',
+					esc_html__( 'Save and Reload', 'arts-elementor-extension' )
 				),
 				'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
 			)

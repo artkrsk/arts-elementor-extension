@@ -6,11 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-use \Elementor\Widget_Base;
-use \Elementor\Controls_Manager;
-use \Elementor\Repeater;
-use \Elementor\Utils;
-use \Arts\Utilities\Utilities;
+use Elementor\Widget_Base;
+use Elementor\Controls_Manager;
+use Elementor\Repeater;
+use Elementor\Utils;
+use Arts\Utilities\Utilities;
 
 abstract class BaseWidget extends Widget_Base {
 	use Traits\Preloads;
@@ -49,12 +49,13 @@ abstract class BaseWidget extends Widget_Base {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @return object The instance of this class.
+	 * @return static The instance of this class.
 	 */
 	public static function instance() {
 		$cls = static::class;
 
 		if ( ! isset( self::$instances[ $cls ] ) ) {
+			/** @phpstan-ignore-next-line */
 			self::$instances[ $cls ] = new static();
 		}
 

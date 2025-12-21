@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use \Elementor\Elements_Manager;
+use Elementor\Elements_Manager;
 
 /**
  * Class Categories

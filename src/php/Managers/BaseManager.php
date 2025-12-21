@@ -31,7 +31,7 @@ abstract class BaseManager {
 	/**
 	 * Other managers used by the current manager.
 	 *
-	 * @var \stdClass
+	 * @var \stdClass|null
 	 */
 	protected $managers;
 
@@ -103,7 +103,7 @@ abstract class BaseManager {
 			$this->managers = new \stdClass();
 		}
 
-		foreach ( $managers as $key => $manager ) {
+		foreach ( (array) $managers as $key => $manager ) {
 			// Prevent adding self to the managers property to avoid infinite loop.
 			if ( $manager !== $this ) {
 				$this->managers->$key = $manager;

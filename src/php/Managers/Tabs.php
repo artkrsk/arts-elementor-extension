@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use \Elementor\Core\Kits\Documents\Kit;
+use Elementor\Core\Kits\Documents\Kit;
 
 /**
  * Class Tabs
