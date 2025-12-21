@@ -95,6 +95,7 @@ class Tabs extends BaseManager {
 	 * @return array<int, string> The array of live control IDs.
 	 */
 	public function get_tabs_live_controls(): array {
+		/** @var array<int, string> $tabs_live_controls */
 		$tabs_live_controls = array();
 
 		foreach ( $this->tabs as $tab ) {
@@ -102,12 +103,15 @@ class Tabs extends BaseManager {
 			if ( defined( $tab['class'] . '::EDITOR_CHANGE_CALLBACK_CONTROLS' ) &&
 			is_array( $tab['class']::EDITOR_CHANGE_CALLBACK_CONTROLS ) &&
 			! empty( $tab['class']::EDITOR_CHANGE_CALLBACK_CONTROLS ) ) {
-				$tabs_live_controls = array_merge( $tabs_live_controls, $tab['class']::EDITOR_CHANGE_CALLBACK_CONTROLS );
+				/** @var array<int, string> $tab_controls */
+				$tab_controls       = $tab['class']::EDITOR_CHANGE_CALLBACK_CONTROLS;
+				$tabs_live_controls = array_merge( $tabs_live_controls, $tab_controls );
 			}
 		}
 
-		$tabs_live_controls = array_unique( $tabs_live_controls );
+		/** @var array<int, string> $unique_controls */
+		$unique_controls = array_unique( $tabs_live_controls );
 
-		return $tabs_live_controls;
+		return $unique_controls;
 	}
 }

@@ -110,7 +110,9 @@ abstract class BaseTab extends Tab_Base {
 	 * @return array<string, mixed> $data The data to be saved.
 	 */
 	public function before_save( array $data ): array {
-		if ( ! isset( $data['settings'] ) || ( isset( $data['settings']['post_status'] ) && Document::STATUS_PUBLISH !== $data['settings']['post_status'] ) ) {
+		if ( ! isset( $data['settings'] ) ||
+		     ! is_array( $data['settings'] ) ||
+		     ( isset( $data['settings']['post_status'] ) && Document::STATUS_PUBLISH !== $data['settings']['post_status'] ) ) {
 			return $data;
 		}
 
@@ -118,12 +120,14 @@ abstract class BaseTab extends Tab_Base {
 			$current_tab_controls = $this->get_current_tab_controls();
 
 			if ( ! empty( $current_tab_controls ) ) {
-				$settings = $this->parent->get_active_settings( $this->parent->get_settings(), $current_tab_controls );
+				$parent_settings = $this->parent->get_settings();
+				assert( is_array( $parent_settings ) );
+				$settings = $this->parent->get_active_settings( $parent_settings, $current_tab_controls );
 
 				foreach ( $current_tab_controls as $control ) {
 					$save_method = $this->get_control_save_method( $control );
 
-					if ( ! $save_method || ! isset( $control['name'] ) ) {
+					if ( ! $save_method || ! isset( $control['name'] ) || ! is_string( $control['name'] ) ) {
 						continue;
 					}
 
@@ -166,7 +170,13 @@ abstract class BaseTab extends Tab_Base {
 	 * @return mixed The control value.
 	 */
 	private function get_control_value( array $data, array $control ) {
-		if ( isset( $data['settings'][ $control['name'] ] ) ) {
+		if ( ! isset( $control['name'] ) || ! is_string( $control['name'] ) ) {
+			return isset( $control['default'] ) ? $control['default'] : '';
+		}
+
+		if ( isset( $data['settings'] ) &&
+		     is_array( $data['settings'] ) &&
+		     isset( $data['settings'][ $control['name'] ] ) ) {
 			return $data['settings'][ $control['name'] ];
 		} elseif ( isset( $control['default'] ) ) {
 			return $control['default'];
@@ -194,11 +204,24 @@ abstract class BaseTab extends Tab_Base {
 	 * @return array<int, array<string, mixed>> The array of controls.
 	 */
 	private function get_current_tab_controls(): array {
-		$controls             = $this->parent->get_controls();
+		$controls = $this->parent->get_controls();
+		/** @var array<int, array<string, mixed>> $current_tab_controls */
 		$current_tab_controls = array();
 
+		if ( ! is_array( $controls ) ) {
+			return $current_tab_controls;
+		}
+
 		foreach ( $controls as $control ) {
-			if ( isset( $control['tab'] ) && $control['tab'] === $this->get_id() && in_array( $control['type'], self::SYNC_CONTROL_TYPES, true ) ) {
+			if ( ! is_array( $control ) ) {
+				continue;
+			}
+
+			if ( isset( $control['tab'] ) &&
+			     $control['tab'] === $this->get_id() &&
+			     isset( $control['type'] ) &&
+			     in_array( $control['type'], self::SYNC_CONTROL_TYPES, true ) ) {
+				/** @var array<string, mixed> $control */
 				$current_tab_controls[] = $control;
 			}
 		}

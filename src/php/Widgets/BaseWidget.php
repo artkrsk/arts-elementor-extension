@@ -42,7 +42,7 @@ abstract class BaseWidget extends Widget_Base {
 	/**
 	 * Allowed HTML tags for wp_kses.
 	 *
-	 * @var array<string, mixed>
+	 * @var array<string, array<string, bool|string>>
 	 */
 	public static $allowed_html = array();
 
@@ -60,7 +60,9 @@ abstract class BaseWidget extends Widget_Base {
 		}
 
 		if ( is_null( self::$allowed_html ) ) {
-			self::$allowed_html = wp_kses_allowed_html( 'post' );
+			/** @var array<string, array<string, bool|string>> $allowed_html */
+			$allowed_html = wp_kses_allowed_html( 'post' );
+			self::$allowed_html = $allowed_html;
 		}
 
 		return self::$instances[ $cls ];
@@ -332,7 +334,9 @@ abstract class BaseWidget extends Widget_Base {
 			);
 		}
 
-		return $repeater->get_controls();
+		/** @var array<string, mixed> $controls */
+		$controls = $repeater->get_controls();
+		return $controls;
 	}
 
 	/**
@@ -346,7 +350,8 @@ abstract class BaseWidget extends Widget_Base {
 	 */
 	public function get_option_value( $option, $group_control_prefix = '', $return_size = true ) {
 		$settings = $this->get_settings_for_display();
-		$setting  = $group_control_prefix . $option;
+		assert( is_array( $settings ) );
+		$setting = $group_control_prefix . $option;
 
 		if ( array_key_exists( $setting, $settings ) ) {
 			if ( $return_size && is_array( $settings[ $setting ] ) && array_key_exists( 'size', $settings[ $setting ] ) ) {

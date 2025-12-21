@@ -67,18 +67,25 @@ trait Preloads {
 	 */
 	protected function get_preload_assets_map(): array {
 		$skin = $this->get_current_skin();
-		$map  = array();
+		/** @var array<string, mixed> $map */
+		$map = array();
 
 		if ( $skin && method_exists( $skin, 'get_frontend_files' ) ) {
 			$assets = $skin->get_frontend_files();
 
-			foreach ( $assets as $asset ) {
-				if ( isset( $asset['id'] ) && isset( $asset['src'] ) ) {
-					$map[ $asset['id'] ] = $asset['src'];
+			if ( is_array( $assets ) ) {
+				foreach ( $assets as $asset ) {
+					if ( is_array( $asset ) &&
+					     isset( $asset['id'] ) &&
+					     ( is_string( $asset['id'] ) || is_int( $asset['id'] ) ) &&
+					     isset( $asset['src'] ) ) {
+						$map[ $asset['id'] ] = $asset['src'];
+					}
 				}
 			}
 		}
 
+		/** @var array<string, mixed> $map */
 		return $map;
 	}
 
@@ -111,7 +118,12 @@ trait Preloads {
 		if ( method_exists( $this, 'get_posts_to_display' ) ) {
 			$posts = $this->get_posts_to_display();
 
-			if ( ! empty( $posts ) && $posts[0] && $posts[0]['video'] && array_key_exists( 'url', $posts[0]['video'] ) && $posts[0]['video']['url'] ) {
+			if ( is_array( $posts ) && ! empty( $posts ) &&
+				 is_array( $posts[0] ) &&
+				 isset( $posts[0]['video'] ) &&
+				 is_array( $posts[0]['video'] ) &&
+				 array_key_exists( 'url', $posts[0]['video'] ) &&
+				 ! empty( $posts[0]['video']['url'] ) ) {
 				$map[ 'Widget_Video_' . $this->get_id() ] = $posts[0]['video']['url'];
 			}
 		}
