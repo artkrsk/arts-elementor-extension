@@ -19,14 +19,14 @@ abstract class BaseWidget extends Widget_Base {
 	/**
 	 * Instances of the class.
 	 *
-	 * @var array
+	 * @var array<class-string, static>
 	 */
 	private static $instances = array();
 
 	/**
 	 * Static fields
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	protected $data_static_fields = array(
 		'title',
@@ -42,7 +42,7 @@ abstract class BaseWidget extends Widget_Base {
 	/**
 	 * Allowed HTML tags for wp_kses.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public static $allowed_html = array();
 
@@ -76,12 +76,12 @@ abstract class BaseWidget extends Widget_Base {
 		$this->add_custom_actions();
 	}
 
-	public function add_init_action() {
+	public function add_init_action(): void {
 		$this->add_wpml_compatibility();
 		$this->add_custom_init_actions();
 	}
 
-	public function add_custom_init_actions() {
+	public function add_custom_init_actions(): void {
 		// Override this method in the widget class
 	}
 
@@ -128,9 +128,9 @@ abstract class BaseWidget extends Widget_Base {
 	/**
 	 * Get widget categories.
 	 *
-	 * @return array The widget categories.
+	 * @return array<int, string> The widget categories.
 	 */
-	public function get_categories() {
+	public function get_categories(): array {
 		return array( 'custom-category' );
 	}
 
@@ -180,9 +180,9 @@ abstract class BaseWidget extends Widget_Base {
 	 *
 	 * This method initializes and returns the repeater controls based on the static fields set.
 	 *
-	 * @return array Repeater controls.
+	 * @return array<string, mixed> Repeater controls.
 	 */
-	protected function get_static_fields_repeater_controls() {
+	protected function get_static_fields_repeater_controls(): array {
 		$repeater   = new Repeater();
 		$fields_set = $this->data_static_fields;
 
@@ -374,36 +374,40 @@ abstract class BaseWidget extends Widget_Base {
 	/**
 	 * Register the widget controls under `Content` tab.
 	 *
+	 * @param string $tab The tab ID.
 	 * @return void
 	 */
-	protected function register_controls_content( $tab ) {
+	protected function register_controls_content( string $tab ): void {
 		// Override this method in the widget class
 	}
 
 	/**
 	 * Register the widget controls under `Settings` tab.
 	 *
+	 * @param string $tab The tab ID.
 	 * @return void
 	 */
-	protected function register_controls_settings( $tab ) {
+	protected function register_controls_settings( string $tab ): void {
 		// Override this method in the widget class
 	}
 
 	/**
 	 * Register the widget controls under `Layout` tab.
 	 *
+	 * @param string $tab The tab ID.
 	 * @return void
 	 */
-	protected function register_controls_layout( $tab ) {
+	protected function register_controls_layout( string $tab ): void {
 		// Override this method in the widget class
 	}
 
 	/**
 	 * Register the widget controls under `Style` tab.
 	 *
+	 * @param string $tab The tab ID.
 	 * @return void
 	 */
-	protected function register_controls_style( $tab ) {
+	protected function register_controls_style( string $tab ): void {
 		// Override this method in the widget class
 	}
 
@@ -424,7 +428,7 @@ abstract class BaseWidget extends Widget_Base {
 	 *
 	 * @param string $text The text to be sanitized and echoed.
 	 */
-	public static function wp_kses_e( $text ) {
+	public static function wp_kses_e( string $text ): void {
 		echo wp_kses( $text, static::$allowed_html );
 	}
 }

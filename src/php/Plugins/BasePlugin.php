@@ -13,6 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Extends the framework-agnostic BasePlugin with Elementor integration.
  *
+ * @template TManagers of \Arts\Base\Containers\ManagersContainer
+ * @extends ArtsBasePlugin<TManagers>
+ *
  * @package Arts\ElementorExtension\Plugins
  */
 abstract class BasePlugin extends ArtsBasePlugin {

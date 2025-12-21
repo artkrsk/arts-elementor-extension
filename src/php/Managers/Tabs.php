@@ -17,14 +17,14 @@ class Tabs extends BaseManager {
 	/**
 	 * The tabs to register.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public $tabs = array();
 
 	/**
 	 * The tabs references.
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	public $references = array();
 
@@ -32,7 +32,7 @@ class Tabs extends BaseManager {
 		__DIR__ . '/../Tabs/BaseTab.php',
 	);
 
-	protected function apply_filters() {
+	protected function apply_filters(): void {
 		$this->tabs = apply_filters( 'arts/elementor_extension/tabs/tabs', $this->tabs );
 	}
 
@@ -69,7 +69,13 @@ class Tabs extends BaseManager {
 		add_filter( 'arts/elementor_extension/editor/live_settings', array( $this, 'add_tab_live_settings' ) );
 	}
 
-	public function add_tab_live_settings( $live_settings ) {
+	/**
+	 * Add tab live settings to the existing live settings array.
+	 *
+	 * @param array<int, string> $live_settings The existing live settings.
+	 * @return array<int, string> The modified live settings with tab controls.
+	 */
+	public function add_tab_live_settings( array $live_settings ): array {
 		$tab_live_controls = $this->get_tabs_live_controls();
 
 		$live_settings = array_merge( $live_settings, $tab_live_controls );
@@ -77,7 +83,12 @@ class Tabs extends BaseManager {
 		return $live_settings;
 	}
 
-	public function get_tabs_live_controls() {
+	/**
+	 * Get live controls from all registered tabs.
+	 *
+	 * @return array<int, string> The array of live control IDs.
+	 */
+	public function get_tabs_live_controls(): array {
 		$tabs_live_controls = array();
 
 		foreach ( $this->tabs as $tab ) {

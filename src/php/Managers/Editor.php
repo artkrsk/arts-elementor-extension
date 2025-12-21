@@ -14,7 +14,7 @@ use Arts\Utilities\Utilities;
  * @package Arts\ElementorExtension\Managers
  */
 class Editor extends BaseManager {
-	public function enqueue_live_settings_script() {
+	public function enqueue_live_settings_script(): void {
 		$script_id     = 'arts-elementor-extension-editor-live-settings';
 		$live_settings = apply_filters( 'arts/elementor_extension/editor/live_settings', array() );
 
@@ -37,7 +37,7 @@ class Editor extends BaseManager {
 		);
 	}
 
-	public function enqueue_widget_handler_script() {
+	public function enqueue_widget_handler_script(): void {
 		if ( ! Utilities::is_elementor_editor_active() ) {
 			return;
 		}

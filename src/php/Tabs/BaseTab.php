@@ -32,7 +32,7 @@ abstract class BaseTab extends Tab_Base {
 	/**
 	 * List of controls that will be available for adding the change callback in the Elementor editor.
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	const EDITOR_CHANGE_CALLBACK_CONTROLS = array();
 
@@ -93,11 +93,11 @@ abstract class BaseTab extends Tab_Base {
 		$this->after_register_tab();
 	}
 
-	protected function before_register_tab() {
+	protected function before_register_tab(): void {
 		// Action to be performed before registering the tab.
 	}
 
-	protected function after_register_tab() {
+	protected function after_register_tab(): void {
 		// Action to be performed before registering the tab.
 	}
 
@@ -105,11 +105,11 @@ abstract class BaseTab extends Tab_Base {
 	 * Handle the save action for Elementor settings and syncs the data to the database.
 	 * This method is called when the user clicks the "Save & Close" button in the Elementor settings.
 	 *
-	 * @param array $data The data to be saved.
+	 * @param array<string, mixed> $data The data to be saved.
 	 *
-	 * @return array $data The data to be saved.
+	 * @return array<string, mixed> $data The data to be saved.
 	 */
-	public function before_save( $data ) {
+	public function before_save( array $data ): array {
 		if ( ! isset( $data['settings'] ) || ( isset( $data['settings']['post_status'] ) && Document::STATUS_PUBLISH !== $data['settings']['post_status'] ) ) {
 			return $data;
 		}
@@ -141,11 +141,11 @@ abstract class BaseTab extends Tab_Base {
 	/**
 	 * Get the method to save the control value.
 	 *
-	 * @param array $control The control data.
+	 * @param array<string, mixed> $control The control data.
 	 *
 	 * @return string|false The save method ("option") or false if no saving needed.
 	 */
-	private function get_control_save_method( $control ) {
+	private function get_control_save_method( array $control ) {
 		if ( ! isset( $control['save_db'] ) ) {
 			return false;
 		}
@@ -160,12 +160,12 @@ abstract class BaseTab extends Tab_Base {
 	/**
 	 * Get the value for a control.
 	 *
-	 * @param array $data    The data containing settings.
-	 * @param array $control The control data.
+	 * @param array<string, mixed> $data    The data containing settings.
+	 * @param array<string, mixed> $control The control data.
 	 *
 	 * @return mixed The control value.
 	 */
-	private function get_control_value( $data, $control ) {
+	private function get_control_value( array $data, array $control ) {
 		if ( isset( $data['settings'][ $control['name'] ] ) ) {
 			return $data['settings'][ $control['name'] ];
 		} elseif ( isset( $control['default'] ) ) {
@@ -182,7 +182,7 @@ abstract class BaseTab extends Tab_Base {
 	 * @param mixed  $value       The value to save.
 	 * @param string $save_method The method to use for saving ("option").
 	 */
-	private function save_control_value( $key, $value, $save_method ) {
+	private function save_control_value( string $key, $value, string $save_method ): void {
 		if ( $save_method === 'option' ) {
 			update_option( $key, $value );
 		}
@@ -191,9 +191,9 @@ abstract class BaseTab extends Tab_Base {
 	/**
 	 * Get the controls registered in the current tab.
 	 *
-	 * @return array The array of controls.
+	 * @return array<int, array<string, mixed>> The array of controls.
 	 */
-	private function get_current_tab_controls() {
+	private function get_current_tab_controls(): array {
 		$controls             = $this->parent->get_controls();
 		$current_tab_controls = array();
 

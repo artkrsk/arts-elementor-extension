@@ -26,45 +26,45 @@ abstract class BaseSkin extends Skin_Base {
 		parent::__construct( $parent );
 	}
 
-	abstract public function render_skin();
+	abstract public function render_skin(): void;
 
 	/**
 	 * Filter the preload assets map from a skin.
 	 *
-	 * @param array $map The existing assets map.
-	 * @return array The modified assets map with preload assets.
+	 * @param array<string, mixed> $map The existing assets map.
+	 * @return array<string, mixed> The modified assets map with preload assets.
 	 */
-	public function add_filter_preload_assets_map( $map ) {
+	public function add_filter_preload_assets_map( array $map ): array {
 		return $map;
 	}
 
 	/**
 	 * Filter the preload images map from a skin.
 	 *
-	 * @param array $map The existing images map.
-	 * @return array The modified images map with preload images.
+	 * @param array<string, mixed> $map The existing images map.
+	 * @return array<string, mixed> The modified images map with preload images.
 	 */
-	public function add_filter_preload_images_map( $map ) {
+	public function add_filter_preload_images_map( array $map ): array {
 		return $map;
 	}
 
 	/**
 	 * Filter the preload JS modules map from a skin.
 	 *
-	 * @param array $map The existing modules map.
-	 * @return array The modified modules map with preload modules.
+	 * @param array<string, mixed> $map The existing modules map.
+	 * @return array<string, mixed> The modified modules map with preload modules.
 	 */
-	public function add_filter_preload_modules_map( $map ) {
+	public function add_filter_preload_modules_map( array $map ): array {
 		return $map;
 	}
 
 	/**
 	 * Filter the prefetch URLs map from a skin.
 	 *
-	 * @param array $map The existing prefetch map.
-	 * @return array The modified prefetch map with prefetch URLs.
+	 * @param array<string, mixed> $map The existing prefetch map.
+	 * @return array<string, mixed> The modified prefetch map with prefetch URLs.
 	 */
-	public function add_filter_prefetch_map( $map ) {
+	public function add_filter_prefetch_map( array $map ): array {
 		return $map;
 	}
 
@@ -72,10 +72,10 @@ abstract class BaseSkin extends Skin_Base {
 	 * Retrieves settings for display.
 	 * Proxy to the parent widget's `get_settings` method.
 	 *
-	 * @param array $selected_settings Array of selected settings.
-	 * @return array Array of settings for display.
+	 * @param array<int, string> $selected_settings Array of selected settings.
+	 * @return array<string, mixed> Array of settings for display.
 	 */
-	public function get_settings_for_display( $selected_settings = array() ) {
+	public function get_settings_for_display( array $selected_settings = array() ): array {
 		$settings = array();
 
 		foreach ( $selected_settings as $setting ) {

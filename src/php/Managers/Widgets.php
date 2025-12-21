@@ -17,21 +17,21 @@ class Widgets extends BaseManager {
 	/**
 	 * The categories for the widgets.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public $categories = array();
 
 	/**
 	 * The widgets to register.
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public $widgets = array();
 
 	/**
 	 * The widgets instances.
 	 *
-	 * @var array
+	 * @var array<int, object>
 	 */
 	public $instances = array();
 
@@ -39,7 +39,7 @@ class Widgets extends BaseManager {
 	 * Files to require manually for the plugin.
 	 * Used on `elementor/widgets/register` action.
 	 *
-	 * @var array
+	 * @var array<int, string>
 	 */
 	protected $require_files = array(
 		__DIR__ . '/../Widgets/BaseWidget.php',
@@ -48,7 +48,7 @@ class Widgets extends BaseManager {
 		// __DIR__ . '/../Widgets/BaseSkinComponent.php',
 	);
 
-	protected function apply_filters() {
+	protected function apply_filters(): void {
 		$this->widgets = apply_filters( 'arts/elementor_extension/widgets/widgets', $this->widgets );
 	}
 
@@ -74,7 +74,7 @@ class Widgets extends BaseManager {
 		do_action( 'arts/elementor_extension/widgets/widgets_registered', $this->instances, $this );
 	}
 
-	public function instantiate() {
+	public function instantiate(): void {
 		// If we've already instantiated widgets, don't do it again
 		if ( ! empty( $this->instances ) ) {
 			return;
@@ -101,7 +101,7 @@ class Widgets extends BaseManager {
 		}
 	}
 
-	public function add_init_actions() {
+	public function add_init_actions(): void {
 		$this->instantiate();
 
 		if ( ! is_array( $this->instances ) || empty( $this->instances ) ) {
@@ -142,5 +142,20 @@ function onElementorInit() {
 " . implode( "\n", $handler_strings ) . '
 }
 })();';
+	}
+
+	/**
+	 * Helper method to instantiate a class.
+	 *
+	 * @param class-string $class The class to instantiate.
+	 * @return object The instantiated class.
+	 */
+	private function get_class_instance( string $class ): object {
+		try {
+			$reflection = new \ReflectionClass( $class );
+			return $reflection->newInstanceArgs();
+		} catch ( \ReflectionException $e ) {
+			return new $class();
+		}
 	}
 }

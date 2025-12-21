@@ -19,10 +19,10 @@ trait WPML {
 	/**
 	 * Filter the Elementor widgets for translation in WPML.
 	 *
-	 * @param array $widgets The existing widgets.
-	 * @return array The modified widgets with translatable fields and integration class.
+	 * @param array<string, mixed> $widgets The existing widgets.
+	 * @return array<string, mixed> The modified widgets with translatable fields and integration class.
 	 */
-	public function filter_wpml_widgets_to_translate( $widgets ) {
+	public function filter_wpml_widgets_to_translate( array $widgets ): array {
 		$name = $this->get_name();
 
 		$widgets[ $name ] = array(
@@ -37,9 +37,9 @@ trait WPML {
 	/**
 	 * Get an array of translatable widget fields.
 	 *
-	 * @return array An array of translatable fields.
+	 * @return array<int, array<string, mixed>> An array of translatable fields.
 	 */
-	protected function wpml_get_translatable_fields() {
+	protected function wpml_get_translatable_fields(): array {
 		// Override this method in the widget class.
 
 		return array();

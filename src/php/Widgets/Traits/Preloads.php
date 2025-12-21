@@ -23,49 +23,49 @@ trait Preloads {
 	/**
 	 * Add preload assets to the given map.
 	 *
-	 * @param array $map The existing assets map.
-	 * @return array The modified assets map with preload assets.
+	 * @param array<string, mixed> $map The existing assets map.
+	 * @return array<string, mixed> The modified assets map with preload assets.
 	 */
-	public function add_preload_assets( $map ) {
+	public function add_preload_assets( array $map ): array {
 		return array_merge( $map, $this->get_preload_assets_map() );
 	}
 
 	/**
 	 * Add preload images to the given map.
 	 *
-	 * @param array $map The existing images map.
-	 * @return array The modified images map with preload images.
+	 * @param array<string, mixed> $map The existing images map.
+	 * @return array<string, mixed> The modified images map with preload images.
 	 */
-	public function add_preload_images( $map ) {
+	public function add_preload_images( array $map ): array {
 		return array_merge( $map, $this->get_preload_images_map() );
 	}
 
 	/**
 	 * Add preload JS modules to the given map.
 	 *
-	 * @param array $map The existing modules map.
-	 * @return array The modified modules map with preload modules.
+	 * @param array<string, mixed> $map The existing modules map.
+	 * @return array<string, mixed> The modified modules map with preload modules.
 	 */
-	public function add_preload_modules( $map ) {
+	public function add_preload_modules( array $map ): array {
 		return array_merge( $map, $this->get_preload_modules_map() );
 	}
 
 	/**
 	 * Add prefetch URLs to the given map.
 	 *
-	 * @param array $map The existing prefetch map.
-	 * @return array The modified prefetch map with prefetch URLs.
+	 * @param array<string, mixed> $map The existing prefetch map.
+	 * @return array<string, mixed> The modified prefetch map with prefetch URLs.
 	 */
-	public function add_prefetch( $map ) {
+	public function add_prefetch( array $map ): array {
 		return array_merge( $map, $this->get_prefetch_map() );
 	}
 
 	/**
 	 * Get the map of preload assets.
 	 *
-	 * @return array The preload assets map.
+	 * @return array<string, mixed> The preload assets map.
 	 */
-	protected function get_preload_assets_map() {
+	protected function get_preload_assets_map(): array {
 		$skin = $this->get_current_skin();
 		$map  = array();
 
@@ -85,27 +85,27 @@ trait Preloads {
 	/**
 	 * Get the map of preload images.
 	 *
-	 * @return array The preload images map.
+	 * @return array<string, mixed> The preload images map.
 	 */
-	protected function get_preload_images_map() {
+	protected function get_preload_images_map(): array {
 		return array();
 	}
 
 	/**
 	 * Get the map of preload JS modules.
 	 *
-	 * @return array The preload modules map.
+	 * @return array<string, mixed> The preload modules map.
 	 */
-	protected function get_preload_modules_map() {
+	protected function get_preload_modules_map(): array {
 		return array();
 	}
 
 	/**
 	 * Get the map of prefetch URLs.
 	 *
-	 * @return array The prefetch map.
+	 * @return array<string, mixed> The prefetch map.
 	 */
-	protected function get_prefetch_map() {
+	protected function get_prefetch_map(): array {
 		$map = array();
 
 		if ( method_exists( $this, 'get_posts_to_display' ) ) {
