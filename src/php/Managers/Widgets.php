@@ -31,7 +31,7 @@ class Widgets extends BaseManager {
 	/**
 	 * The widgets instances.
 	 *
-	 * @var array<int, object>
+	 * @var array<int, \Elementor\Widget_Base>
 	 */
 	public $instances = array();
 
@@ -43,9 +43,7 @@ class Widgets extends BaseManager {
 	 */
 	protected $require_files = array(
 		__DIR__ . '/../Widgets/BaseWidget.php',
-		// __DIR__ . '/../Widgets/BaseWidgetComponent.php',
 		__DIR__ . '/../Widgets/BaseSkin.php',
-		// __DIR__ . '/../Widgets/BaseSkinComponent.php',
 	);
 
 	protected function apply_filters(): void {
@@ -94,7 +92,9 @@ class Widgets extends BaseManager {
 			require_once $widget['file'];
 
 			if ( class_exists( $widget['class'] ) ) {
-				$instance = $this->get_class_instance( $widget['class'] );
+				/** @var class-string<\Elementor\Widget_Base> $widget_class */
+				$widget_class = $widget['class'];
+				$instance     = $this->get_class_instance( $widget_class );
 
 				$this->instances[] = $instance;
 			}
@@ -145,10 +145,10 @@ function onElementorInit() {
 	}
 
 	/**
-	 * Helper method to instantiate a class.
+	 * Helper method to instantiate a widget class.
 	 *
-	 * @param class-string $class The class to instantiate.
-	 * @return object The instantiated class.
+	 * @param class-string<\Elementor\Widget_Base> $class The widget class to instantiate.
+	 * @return \Elementor\Widget_Base The instantiated widget.
 	 */
 	private function get_class_instance( string $class ): object {
 		try {
