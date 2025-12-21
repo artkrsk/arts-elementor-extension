@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b55fc1a89bf9680eb9bfaf9a7a5c06f",
+    "content-hash": "4d5579b7b9c9678fe6608d8a522d0589",
     "packages": [
         {
             "name": "arts/base",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/arts-base.git",
-                "reference": "66194df8ab6be4508888bb9371a99895056e16d1"
+                "reference": "a5874a2040edd97c863340aaa14fe976cf2f5772"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/arts-base/zipball/66194df8ab6be4508888bb9371a99895056e16d1",
-                "reference": "66194df8ab6be4508888bb9371a99895056e16d1",
+                "url": "https://api.github.com/repos/artkrsk/arts-base/zipball/a5874a2040edd97c863340aaa14fe976cf2f5772",
+                "reference": "a5874a2040edd97c863340aaa14fe976cf2f5772",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 "issues": "https://github.com/artkrsk/arts-base/issues",
                 "source": "https://github.com/artkrsk/arts-base/tree/main"
             },
-            "time": "2025-12-21T14:18:00+00:00"
+            "time": "2025-12-21T18:01:12+00:00"
         },
         {
             "name": "arts/utilities",
@@ -158,10 +158,16 @@
         {
             "name": "arts/elementor-stubs",
             "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "../elementor-stubs",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/artkrsk/elementor-stubs.git",
                 "reference": "d027419df4162c83b09a47c5f607f5754035d8c3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/d027419df4162c83b09a47c5f607f5754035d8c3",
+                "reference": "d027419df4162c83b09a47c5f607f5754035d8c3",
+                "shasum": ""
             },
             "require": {
                 "ergebnis/composer-normalize": "^2.48",
@@ -179,38 +185,9 @@
                 "vlucas/phpdotenv": "^5.6",
                 "wp-coding-standards/wpcs": "^3.0"
             },
+            "default-branch": true,
             "type": "library",
-            "scripts": {
-                "post-install-cmd": [
-                    "vendor/bin/captainhook install -f -s"
-                ],
-                "post-update-cmd": [
-                    "vendor/bin/captainhook install -f -s"
-                ],
-                "generate": [
-                    "php generate.php"
-                ],
-                "normalize": [
-                    "composer-normalize"
-                ],
-                "test": [
-                    "@test:phpunit",
-                    "@test:phpstan",
-                    "@test:cs"
-                ],
-                "test:cs": [
-                    "phpcs"
-                ],
-                "test:cs:fix": [
-                    "phpcbf"
-                ],
-                "test:phpstan": [
-                    "phpstan analyze -c tests/phpstan.neon"
-                ],
-                "test:phpunit": [
-                    "phpunit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -222,19 +199,20 @@
             ],
             "description": "Comprehensive PHPStan stubs for Elementor and Elementor Pro WordPress page builder - auto-generated, self-contained, plug & play",
             "keywords": [
+                "PHPStan",
                 "elementor",
                 "elementor-pro",
                 "page-builder",
-                "phpstan",
                 "static-analysis",
                 "stubs",
                 "type-definitions",
                 "wordpress"
             ],
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/artkrsk/elementor-stubs/issues",
+                "source": "https://github.com/artkrsk/elementor-stubs/tree/v3.33.6.1"
+            },
+            "time": "2025-12-21T16:27:45+00:00"
         },
         {
             "name": "brain/monkey",

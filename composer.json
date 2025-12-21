@@ -14,15 +14,6 @@
     "arts/base": "@dev",
     "arts/utilities": "@dev"
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../elementor-stubs",
-      "options": {
-        "symlink": true
-      }
-    }
-  ],
   "require-dev": {
     "arts/elementor-stubs": "@dev",
     "brain/monkey": "^2.6",
