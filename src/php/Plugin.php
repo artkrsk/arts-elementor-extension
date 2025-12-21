@@ -94,14 +94,18 @@ class Plugin extends BasePlugin {
 		}
 
 		// Check for required Elementor version
+		$required_elementor_version = $this->config['required_elementor_version'] ?? '3.18';
+		assert( is_string( $required_elementor_version ) );
 		if ( ! defined( 'ELEMENTOR_VERSION' ) ||
-			 ! version_compare( ELEMENTOR_VERSION, $this->config['required_elementor_version'], '>=' ) ) {
+			 ! version_compare( ELEMENTOR_VERSION, $required_elementor_version, '>=' ) ) {
 			add_action( 'admin_notices', array( $this, 'admin_notice_minimum_elementor_version' ) );
 			return;
 		}
 
 		// Check for required PHP version
-		if ( version_compare( PHP_VERSION, $this->config['required_php_version'], '<' ) ) {
+		$required_php_version = $this->config['required_php_version'] ?? '7.4';
+		assert( is_string( $required_php_version ) );
+		if ( version_compare( PHP_VERSION, $required_php_version, '<' ) ) {
 			add_action( 'admin_notices', array( $this, 'admin_notice_minimum_php_version' ) );
 			return;
 		}
@@ -167,12 +171,14 @@ class Plugin extends BasePlugin {
 			unset( $_GET['activate'] );
 		}
 
+		$required_version = $this->config['required_elementor_version'] ?? '3.18';
+		assert( is_string( $required_version ) );
 		$message = sprintf(
 			/* translators: 1: Plugin name 2: Elementor 3: Required Elementor version */
 			esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'arts-elementor-extension' ),
 			'<strong>' . $this->strings['extension_name'] . '</strong>',
 			'<strong>' . esc_html__( 'Elementor', 'arts-elementor-extension' ) . '</strong>',
-			$this->config['required_elementor_version']
+			$required_version
 		);
 
 		printf( '<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', $message );
@@ -191,12 +197,14 @@ class Plugin extends BasePlugin {
 			unset( $_GET['activate'] );
 		}
 
+		$required_version = $this->config['required_php_version'] ?? '7.4';
+		assert( is_string( $required_version ) );
 		$message = sprintf(
 			/* translators: 1: Plugin name 2: PHP 3: Required PHP version */
 			esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'arts-elementor-extension' ),
 			'<strong>' . $this->strings['extension_name'] . '</strong>',
 			'<strong>' . esc_html__( 'PHP', 'arts-elementor-extension' ) . '</strong>',
-			'<strong>' . $this->config['required_php_version'] . '</strong>'
+			'<strong>' . $required_version . '</strong>'
 		);
 
 		printf( '<div class="notice notice-error is-dismissible"><p>%1$s</p></div>', $message );

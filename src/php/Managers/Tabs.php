@@ -17,14 +17,14 @@ class Tabs extends BaseManager {
 	/**
 	 * The tabs to register.
 	 *
-	 * @var array<string, mixed>
+	 * @var array<int, array{file?: string, class: class-string}>
 	 */
 	public $tabs = array();
 
 	/**
 	 * The tabs references.
 	 *
-	 * @var array<int, string>
+	 * @var array<int, class-string>
 	 */
 	public $references = array();
 
@@ -33,7 +33,13 @@ class Tabs extends BaseManager {
 	);
 
 	protected function apply_filters(): void {
-		$this->tabs = apply_filters( 'arts/elementor_extension/tabs/tabs', $this->tabs );
+		/**
+		 * @var array<int, array{file?: string, class: class-string}> $filtered
+		 */
+		$filtered = apply_filters( 'arts/elementor_extension/tabs/tabs', $this->tabs );
+		if ( is_array( $filtered ) ) {
+			$this->tabs = $filtered;
+		}
 	}
 
 	/**

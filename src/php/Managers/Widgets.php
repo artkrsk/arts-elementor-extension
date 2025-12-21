@@ -24,7 +24,7 @@ class Widgets extends BaseManager {
 	/**
 	 * The widgets to register.
 	 *
-	 * @var array<string, mixed>
+	 * @var array<int, array{file: string, class: class-string<\Elementor\Widget_Base>}>
 	 */
 	public $widgets = array();
 
@@ -47,7 +47,13 @@ class Widgets extends BaseManager {
 	);
 
 	protected function apply_filters(): void {
-		$this->widgets = apply_filters( 'arts/elementor_extension/widgets/widgets', $this->widgets );
+		/**
+		 * @var array<int, array{file: string, class: class-string<\Elementor\Widget_Base>}> $filtered
+		 */
+		$filtered = apply_filters( 'arts/elementor_extension/widgets/widgets', $this->widgets );
+		if ( is_array( $filtered ) ) {
+			$this->widgets = $filtered;
+		}
 	}
 
 	/**
