@@ -61,7 +61,7 @@ abstract class BaseWidget extends Widget_Base {
 
 		if ( is_null( self::$allowed_html ) ) {
 			/** @var array<string, array<string, bool|string>> $allowed_html */
-			$allowed_html = wp_kses_allowed_html( 'post' );
+			$allowed_html       = wp_kses_allowed_html( 'post' );
 			self::$allowed_html = $allowed_html;
 		}
 
@@ -188,7 +188,7 @@ abstract class BaseWidget extends Widget_Base {
 		$repeater   = new Repeater();
 		$fields_set = $this->data_static_fields;
 
-		if ( in_array( 'title', $fields_set ) ) {
+		if ( in_array( 'title', $fields_set, true ) ) {
 			$repeater->add_control(
 				'title',
 				array(
@@ -200,7 +200,7 @@ abstract class BaseWidget extends Widget_Base {
 			);
 		}
 
-		if ( in_array( 'date', $fields_set ) ) {
+		if ( in_array( 'date', $fields_set, true ) ) {
 			$repeater->add_control(
 				'date',
 				array(
@@ -216,7 +216,7 @@ abstract class BaseWidget extends Widget_Base {
 			);
 		}
 
-		if ( in_array( 'category', $fields_set ) ) {
+		if ( in_array( 'category', $fields_set, true ) ) {
 			$repeater->add_control(
 				'category',
 				array(
@@ -228,7 +228,7 @@ abstract class BaseWidget extends Widget_Base {
 			);
 		}
 
-		if ( in_array( 'year', $fields_set ) ) {
+		if ( in_array( 'year', $fields_set, true ) ) {
 			$repeater->add_control(
 				'year',
 				array(
@@ -240,7 +240,7 @@ abstract class BaseWidget extends Widget_Base {
 			);
 		}
 
-		if ( in_array( 'description', $fields_set ) ) {
+		if ( in_array( 'description', $fields_set, true ) ) {
 			$repeater->add_control(
 				'description',
 				array(
@@ -252,7 +252,7 @@ abstract class BaseWidget extends Widget_Base {
 			);
 		}
 
-		if ( in_array( 'link', $fields_set ) ) {
+		if ( in_array( 'link', $fields_set, true ) ) {
 			$repeater->add_control(
 				'link',
 				array(
@@ -273,7 +273,7 @@ abstract class BaseWidget extends Widget_Base {
 			);
 		}
 
-		if ( in_array( 'image', $fields_set ) ) {
+		if ( in_array( 'image', $fields_set, true ) ) {
 			$repeater->add_control(
 				'image',
 				array(
@@ -287,7 +287,7 @@ abstract class BaseWidget extends Widget_Base {
 			);
 		}
 
-		if ( in_array( 'secondary_image', $fields_set ) ) {
+		if ( in_array( 'secondary_image', $fields_set, true ) ) {
 			$repeater->add_control(
 				'secondary_image',
 				array(
@@ -301,7 +301,7 @@ abstract class BaseWidget extends Widget_Base {
 			);
 		}
 
-		if ( in_array( 'video', $fields_set ) ) {
+		if ( in_array( 'video', $fields_set, true ) ) {
 			$repeater->add_control(
 				'video',
 				array(

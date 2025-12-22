@@ -22,7 +22,7 @@ abstract class BasePlugin extends ArtsBasePlugin {
 	/**
 	 * Initializes Elementor Extension Plugin after run.
 	 */
-	protected function do_run() {
+	protected function do_run(): void {
 		\Arts\ElementorExtension\Plugin::instance();
 	}
 }

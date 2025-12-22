@@ -76,9 +76,9 @@ trait Preloads {
 			if ( is_array( $assets ) ) {
 				foreach ( $assets as $asset ) {
 					if ( is_array( $asset ) &&
-					     isset( $asset['id'] ) &&
-					     ( is_string( $asset['id'] ) || is_int( $asset['id'] ) ) &&
-					     isset( $asset['src'] ) ) {
+						isset( $asset['id'] ) &&
+						( is_string( $asset['id'] ) || is_int( $asset['id'] ) ) &&
+						isset( $asset['src'] ) ) {
 						$map[ $asset['id'] ] = $asset['src'];
 					}
 				}
@@ -119,11 +119,11 @@ trait Preloads {
 			$posts = $this->get_posts_to_display();
 
 			if ( is_array( $posts ) && ! empty( $posts ) &&
-				 is_array( $posts[0] ) &&
-				 isset( $posts[0]['video'] ) &&
-				 is_array( $posts[0]['video'] ) &&
-				 array_key_exists( 'url', $posts[0]['video'] ) &&
-				 ! empty( $posts[0]['video']['url'] ) ) {
+				is_array( $posts[0] ) &&
+				isset( $posts[0]['video'] ) &&
+				is_array( $posts[0]['video'] ) &&
+				array_key_exists( 'url', $posts[0]['video'] ) &&
+				! empty( $posts[0]['video']['url'] ) ) {
 				$map[ 'Widget_Video_' . $this->get_id() ] = $posts[0]['video']['url'];
 			}
 		}

@@ -97,7 +97,7 @@ class Plugin extends BasePlugin {
 		$required_elementor_version = $this->config['required_elementor_version'] ?? '3.18';
 		assert( is_string( $required_elementor_version ) );
 		if ( ! defined( 'ELEMENTOR_VERSION' ) ||
-			 ! version_compare( ELEMENTOR_VERSION, $required_elementor_version, '>=' ) ) {
+			! version_compare( ELEMENTOR_VERSION, $required_elementor_version, '>=' ) ) {
 			add_action( 'admin_notices', array( $this, 'admin_notice_minimum_elementor_version' ) );
 			return;
 		}

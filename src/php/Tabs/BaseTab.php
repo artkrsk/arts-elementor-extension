@@ -111,8 +111,8 @@ abstract class BaseTab extends Tab_Base {
 	 */
 	public function before_save( array $data ): array {
 		if ( ! isset( $data['settings'] ) ||
-		     ! is_array( $data['settings'] ) ||
-		     ( isset( $data['settings']['post_status'] ) && Document::STATUS_PUBLISH !== $data['settings']['post_status'] ) ) {
+			! is_array( $data['settings'] ) ||
+			( isset( $data['settings']['post_status'] ) && Document::STATUS_PUBLISH !== $data['settings']['post_status'] ) ) {
 			return $data;
 		}
 
@@ -175,8 +175,8 @@ abstract class BaseTab extends Tab_Base {
 		}
 
 		if ( isset( $data['settings'] ) &&
-		     is_array( $data['settings'] ) &&
-		     isset( $data['settings'][ $control['name'] ] ) ) {
+			is_array( $data['settings'] ) &&
+			isset( $data['settings'][ $control['name'] ] ) ) {
 			return $data['settings'][ $control['name'] ];
 		} elseif ( isset( $control['default'] ) ) {
 			return $control['default'];
@@ -218,9 +218,9 @@ abstract class BaseTab extends Tab_Base {
 			}
 
 			if ( isset( $control['tab'] ) &&
-			     $control['tab'] === $this->get_id() &&
-			     isset( $control['type'] ) &&
-			     in_array( $control['type'], self::SYNC_CONTROL_TYPES, true ) ) {
+				$control['tab'] === $this->get_id() &&
+				isset( $control['type'] ) &&
+				in_array( $control['type'], self::SYNC_CONTROL_TYPES, true ) ) {
 				/** @var array<string, mixed> $control */
 				$current_tab_controls[] = $control;
 			}
