@@ -31,7 +31,7 @@
 
 	<!-- Minimum versions -->
 	<config name="minimum_supported_wp_version" value="6.0"/>
-	<config name="testVersion" value="7.2-"/>
+	<config name="testVersion" value="8.0"/>
 
 	<!-- Show progress and use colors -->
 	<arg value="ps"/>
