@@ -51,3 +51,4 @@ src/styles export-ignore
 fixtures export-ignore
 captainhook.json export-ignore
 phpstan.neon export-ignore
+.editorconfig export-ignore
