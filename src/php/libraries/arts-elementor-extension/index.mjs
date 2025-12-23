@@ -1,5 +1,5 @@
 /*!
- * Arts Elementor Extension v1.0.4
+ * Arts Elementor Extension v1.0.5
  * https://artemsemkin.com
  * https://github.com/artkrsk/arts-elementor-extension
  * © 2025 Artem Semkin

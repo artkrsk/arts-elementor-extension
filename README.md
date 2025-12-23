@@ -1,7 +1,7 @@
 # Arts Elementor Extension Framework
 
 ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue)
-![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple)
+![PHP](https://img.shields.io/badge/PHP-8.0%2B-purple)
 ![Elementor](https://img.shields.io/badge/Elementor-compatible-red)
 ![License](https://img.shields.io/badge/license-GPL--3.0-green)
 
@@ -19,7 +19,7 @@ This framework provides a structured approach to developing Elementor extensions
 ## Requirements
 
 - WordPress 6.0+
-- PHP 7.4+
+- PHP 8.0+
 - Elementor (latest version recommended)
 
 ## Installation
@@ -356,7 +356,3 @@ The framework follows a modular architecture:
 - **BasePlugin**: Core plugin setup and initialization
 - **Managers**: Handle registration of components
 - **Traits**: Reusable functionality (WPML)
-
-## License
-
-This project is licensed under the GPL-3.0 License.
