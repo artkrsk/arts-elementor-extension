@@ -46,6 +46,10 @@ class Editor extends BaseManager {
 			return;
 		}
 
+		if ( ! isset( $this->managers->widgets ) ) {
+			return;
+		}
+
 		$script_id = 'arts-elementor-extension-widget-handler';
 		$inline_js = $this->managers->widgets->get_elementor_editor_js_string();
 

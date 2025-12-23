@@ -61,7 +61,11 @@ class Tabs extends BaseManager {
 				require_once $tab['file'];
 			}
 
-			if ( ! isset( $tab['class'] ) || ! class_exists( $tab['class'] ) ) {
+			if ( ! isset( $tab['class'] ) ) {
+				continue;
+			}
+
+			if ( ! class_exists( $tab['class'] ) ) {
 				continue;
 			}
 

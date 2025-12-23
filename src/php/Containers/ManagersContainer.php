@@ -17,11 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Provides type-safe access to all managers.
  *
+ * @property Categories $categories
+ * @property Editor $editor
+ * @property Tabs $tabs
+ * @property Widgets $widgets
+ *
  * @package Arts\ElementorExtension\Containers
  */
 class ManagersContainer extends BaseManagersContainer {
-	public Categories $categories;
-	public Editor $editor;
-	public Tabs $tabs;
-	public Widgets $widgets;
 }
