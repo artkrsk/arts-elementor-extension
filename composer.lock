@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/arts-utilities.git",
-                "reference": "de5753234bb52caceab717317f23aaa9a5127785"
+                "reference": "7fab2447aceeee131e3db0cdef957013bd0b4fc0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/arts-utilities/zipball/de5753234bb52caceab717317f23aaa9a5127785",
-                "reference": "de5753234bb52caceab717317f23aaa9a5127785",
+                "url": "https://api.github.com/repos/artkrsk/arts-utilities/zipball/7fab2447aceeee131e3db0cdef957013bd0b4fc0",
+                "reference": "7fab2447aceeee131e3db0cdef957013bd0b4fc0",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +105,7 @@
                 "issues": "https://github.com/artkrsk/arts-utilities/issues",
                 "source": "https://github.com/artkrsk/arts-utilities/tree/master"
             },
-            "time": "2025-12-22T09:43:09+00:00"
+            "time": "2026-01-12T07:28:31+00:00"
         }
     ],
     "packages-dev": [
@@ -163,23 +163,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/elementor-stubs.git",
-                "reference": "8ecb686ffaf99815f47aa249c13b163223cee842"
+                "reference": "f51ad248f93200c17e8870a4d380d224ee339a1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/8ecb686ffaf99815f47aa249c13b163223cee842",
-                "reference": "8ecb686ffaf99815f47aa249c13b163223cee842",
+                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/f51ad248f93200c17e8870a4d380d224ee339a1e",
+                "reference": "f51ad248f93200c17e8870a4d380d224ee339a1e",
                 "shasum": ""
             },
             "require": {
-                "ergebnis/composer-normalize": "^2.48",
-                "php": ">=7.2",
+                "php": ">=8.0",
                 "php-stubs/woocommerce-stubs": "^10.4",
                 "php-stubs/wordpress-stubs": "^6.9",
                 "php-stubs/wp-cli-stubs": "^2.12"
             },
             "require-dev": {
                 "captainhook/captainhook": "^5.27",
+                "ergebnis/composer-normalize": "^2.48",
                 "php-stubs/generator": "^0.8",
                 "phpstan/phpstan": "^2.0",
                 "phpunit/phpunit": "^9.5",
@@ -204,17 +204,26 @@
                 "PHPStan",
                 "elementor",
                 "elementor-pro",
+                "ide-autocomplete",
+                "intellisense",
                 "page-builder",
                 "static-analysis",
                 "stubs",
                 "type-definitions",
+                "type-safety",
                 "wordpress"
             ],
             "support": {
                 "issues": "https://github.com/artkrsk/elementor-stubs/issues",
-                "source": "https://github.com/artkrsk/elementor-stubs/tree/v3.34.0"
+                "source": "https://github.com/artkrsk/elementor-stubs/tree/master"
             },
-            "time": "2025-12-23T01:52:24+00:00"
+            "funding": [
+                {
+                    "url": "https://www.buymeacoffee.com/artemsemkin",
+                    "type": "buy_me_a_coffee"
+                }
+            ],
+            "time": "2026-01-02T14:58:38+00:00"
         },
         {
             "name": "brain/monkey",
@@ -384,30 +393,29 @@
         },
         {
             "name": "doctrine/instantiator",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/instantiator.git",
-                "reference": "c6222283fa3f4ac679f8b9ced9a4e23f163e80d0"
+                "reference": "23da848e1a2308728fe5fdddabf4be17ff9720c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/c6222283fa3f4ac679f8b9ced9a4e23f163e80d0",
-                "reference": "c6222283fa3f4ac679f8b9ced9a4e23f163e80d0",
+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/23da848e1a2308728fe5fdddabf4be17ff9720c7",
+                "reference": "23da848e1a2308728fe5fdddabf4be17ff9720c7",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1"
+                "php": "^8.4"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^11",
+                "doctrine/coding-standard": "^14",
                 "ext-pdo": "*",
                 "ext-phar": "*",
                 "phpbench/phpbench": "^1.2",
-                "phpstan/phpstan": "^1.9.4",
-                "phpstan/phpstan-phpunit": "^1.3",
-                "phpunit/phpunit": "^9.5.27",
-                "vimeo/psalm": "^5.4"
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^10.5.58"
             },
             "type": "library",
             "autoload": {
@@ -434,7 +442,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/instantiator/issues",
-                "source": "https://github.com/doctrine/instantiator/tree/2.0.0"
+                "source": "https://github.com/doctrine/instantiator/tree/2.1.0"
             },
             "funding": [
                 {
@@ -450,7 +458,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-12-30T00:23:10+00:00"
+            "time": "2026-01-05T06:47:08+00:00"
         },
         {
             "name": "ergebnis/composer-normalize",
@@ -969,16 +977,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "6.6.3",
+            "version": "6.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jsonrainbow/json-schema.git",
-                "reference": "134e98916fa2f663afa623970af345cd788e8967"
+                "reference": "2eeb75d21cf73211335888e7f5e6fd7440723ec7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/134e98916fa2f663afa623970af345cd788e8967",
-                "reference": "134e98916fa2f663afa623970af345cd788e8967",
+                "url": "https://api.github.com/repos/jsonrainbow/json-schema/zipball/2eeb75d21cf73211335888e7f5e6fd7440723ec7",
+                "reference": "2eeb75d21cf73211335888e7f5e6fd7440723ec7",
                 "shasum": ""
             },
             "require": {
@@ -1038,9 +1046,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jsonrainbow/json-schema/issues",
-                "source": "https://github.com/jsonrainbow/json-schema/tree/6.6.3"
+                "source": "https://github.com/jsonrainbow/json-schema/tree/6.6.4"
             },
-            "time": "2025-12-02T10:21:33+00:00"
+            "time": "2025-12-19T15:01:32+00:00"
         },
         {
             "name": "localheinz/diff",
