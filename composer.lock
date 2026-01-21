@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/arts-base.git",
-                "reference": "d926ae6109f8cd60a8d2969dd048e986671102e9"
+                "reference": "0174748e70bbf00034659035f9bac603e38fcb62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/arts-base/zipball/d926ae6109f8cd60a8d2969dd048e986671102e9",
-                "reference": "d926ae6109f8cd60a8d2969dd048e986671102e9",
+                "url": "https://api.github.com/repos/artkrsk/arts-base/zipball/0174748e70bbf00034659035f9bac603e38fcb62",
+                "reference": "0174748e70bbf00034659035f9bac603e38fcb62",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 "issues": "https://github.com/artkrsk/arts-base/issues",
                 "source": "https://github.com/artkrsk/arts-base/tree/main"
             },
-            "time": "2025-12-23T01:28:43+00:00"
+            "time": "2026-01-12T07:40:48+00:00"
         },
         {
             "name": "arts/utilities",
@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/arts-utilities.git",
-                "reference": "7fab2447aceeee131e3db0cdef957013bd0b4fc0"
+                "reference": "fb9e7d657bccdaeebe1a1313e4798ba97ee35ed2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/arts-utilities/zipball/7fab2447aceeee131e3db0cdef957013bd0b4fc0",
-                "reference": "7fab2447aceeee131e3db0cdef957013bd0b4fc0",
+                "url": "https://api.github.com/repos/artkrsk/arts-utilities/zipball/fb9e7d657bccdaeebe1a1313e4798ba97ee35ed2",
+                "reference": "fb9e7d657bccdaeebe1a1313e4798ba97ee35ed2",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +105,7 @@
                 "issues": "https://github.com/artkrsk/arts-utilities/issues",
                 "source": "https://github.com/artkrsk/arts-utilities/tree/master"
             },
-            "time": "2026-01-12T07:28:31+00:00"
+            "time": "2026-01-16T04:44:39+00:00"
         }
     ],
     "packages-dev": [
@@ -163,12 +163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/elementor-stubs.git",
-                "reference": "f51ad248f93200c17e8870a4d380d224ee339a1e"
+                "reference": "705f2a1f93911bf7b550600f5b343b2e6277e254"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/f51ad248f93200c17e8870a4d380d224ee339a1e",
-                "reference": "f51ad248f93200c17e8870a4d380d224ee339a1e",
+                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/705f2a1f93911bf7b550600f5b343b2e6277e254",
+                "reference": "705f2a1f93911bf7b550600f5b343b2e6277e254",
                 "shasum": ""
             },
             "require": {
@@ -223,7 +223,7 @@
                     "type": "buy_me_a_coffee"
                 }
             ],
-            "time": "2026-01-02T14:58:38+00:00"
+            "time": "2026-01-15T01:58:38+00:00"
         },
         {
             "name": "brain/monkey",
@@ -1865,11 +1865,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.33",
+            "version": "2.1.36",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9e800e6bee7d5bd02784d4c6069b48032d16224f",
-                "reference": "9e800e6bee7d5bd02784d4c6069b48032d16224f",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2132e5e2361d11d40af4c17faa16f043269a4cf3",
+                "reference": "2132e5e2361d11d40af4c17faa16f043269a4cf3",
                 "shasum": ""
             },
             "require": {
@@ -1914,7 +1914,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-05T10:24:31+00:00"
+            "time": "2026-01-21T13:58:26+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
