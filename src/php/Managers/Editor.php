@@ -53,21 +53,38 @@ class Editor extends BaseManager {
 		$script_id = 'arts-elementor-extension-widget-handler';
 		$inline_js = $this->managers->widgets->get_elementor_editor_js_string();
 
-		if ( ! empty( $inline_js ) ) {
-			$dir_url = $this->args['dir_url'] ?? '';
-			assert( is_string( $dir_url ) );
-
-			wp_enqueue_script(
-				$script_id,
-				$dir_url . 'libraries/arts-elementor-widget-handler/index.umd.js',
-				array(),
-				false,
-				true
-			);
+		if ( empty( $inline_js ) ) {
+			return;
 		}
 
-		if ( ! empty( $inline_js ) ) {
-			wp_add_inline_script( $script_id, $inline_js );
+		$dir_url = $this->args['dir_url'] ?? '';
+
+		if ( ! is_string( $dir_url ) ) {
+			return;
 		}
+
+		// Enqueue the main script file
+		wp_enqueue_script(
+			$script_id,
+			$dir_url . 'libraries/arts-elementor-widget-handler/index.umd.js',
+			array(),
+			false,
+			true
+		);
+
+		// Guard: Check if this exact content was already added by another vendor copy
+		// Multiple plugins may bundle arts/elementor-extension, each calling this method
+		global $wp_scripts;
+		if ( $wp_scripts instanceof \WP_Scripts &&
+			isset( $wp_scripts->registered[ $script_id ] ) &&
+			isset( $wp_scripts->registered[ $script_id ]->extra['after'] ) ) {
+			$existing_scripts = (array) $wp_scripts->registered[ $script_id ]->extra['after'];
+			if ( in_array( $inline_js, $existing_scripts, true ) ) {
+				// This exact content already added - skip to prevent duplication
+				return;
+			}
+		}
+
+		wp_add_inline_script( $script_id, $inline_js, 'after' );
 	}
 }
