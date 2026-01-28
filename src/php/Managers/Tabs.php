@@ -54,7 +54,10 @@ class Tabs extends BaseManager {
 			return;
 		}
 
-		$this->require_files();
+		// Only require BaseTab if it's not already declared (prevents conflicts when multiple plugins/theme use this package)
+		if ( ! class_exists( 'Arts\ElementorExtension\Tabs\BaseTab' ) ) {
+			$this->require_files();
+		}
 
 		foreach ( $this->tabs as $tab ) {
 			if ( isset( $tab['file'] ) && file_exists( $tab['file'] ) ) {

@@ -84,7 +84,10 @@ class Widgets extends BaseManager {
 			return;
 		}
 
-		$this->require_files();
+		// Only require base classes if they're not already declared (prevents conflicts when multiple plugins/theme use this package)
+		if ( ! class_exists( 'Arts\ElementorExtension\Widgets\BaseWidget' ) || ! class_exists( 'Arts\ElementorExtension\Widgets\BaseSkin' ) ) {
+			$this->require_files();
+		}
 
 		if ( ! is_array( $this->widgets ) || empty( $this->widgets ) ) {
 			return;
