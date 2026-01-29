@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/arts-base.git",
-                "reference": "84bae15b35f06c7d1a3a7967030670d0b955ee8e"
+                "reference": "323046321ce3913e008579822b08b087fb510133"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/arts-base/zipball/84bae15b35f06c7d1a3a7967030670d0b955ee8e",
-                "reference": "84bae15b35f06c7d1a3a7967030670d0b955ee8e",
+                "url": "https://api.github.com/repos/artkrsk/arts-base/zipball/323046321ce3913e008579822b08b087fb510133",
+                "reference": "323046321ce3913e008579822b08b087fb510133",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 "issues": "https://github.com/artkrsk/arts-base/issues",
                 "source": "https://github.com/artkrsk/arts-base/tree/main"
             },
-            "time": "2026-01-21T17:34:30+00:00"
+            "time": "2026-01-29T06:36:51+00:00"
         },
         {
             "name": "arts/utilities",
