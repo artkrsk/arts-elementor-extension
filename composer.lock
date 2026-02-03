@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/arts-utilities.git",
-                "reference": "c2e112a0a164f04e64d5b2f0763f76c5a753b8b9"
+                "reference": "19d72cd3e079bf44a7aa5d37580df266a3894b1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/arts-utilities/zipball/c2e112a0a164f04e64d5b2f0763f76c5a753b8b9",
-                "reference": "c2e112a0a164f04e64d5b2f0763f76c5a753b8b9",
+                "url": "https://api.github.com/repos/artkrsk/arts-utilities/zipball/19d72cd3e079bf44a7aa5d37580df266a3894b1d",
+                "reference": "19d72cd3e079bf44a7aa5d37580df266a3894b1d",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +105,7 @@
                 "issues": "https://github.com/artkrsk/arts-utilities/issues",
                 "source": "https://github.com/artkrsk/arts-utilities/tree/master"
             },
-            "time": "2026-01-21T17:38:49+00:00"
+            "time": "2026-01-29T08:41:44+00:00"
         }
     ],
     "packages-dev": [
@@ -163,12 +163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/elementor-stubs.git",
-                "reference": "705f2a1f93911bf7b550600f5b343b2e6277e254"
+                "reference": "b2614441834c40f85d25e4a595fcd905e0f711b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/705f2a1f93911bf7b550600f5b343b2e6277e254",
-                "reference": "705f2a1f93911bf7b550600f5b343b2e6277e254",
+                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/b2614441834c40f85d25e4a595fcd905e0f711b4",
+                "reference": "b2614441834c40f85d25e4a595fcd905e0f711b4",
                 "shasum": ""
             },
             "require": {
@@ -223,7 +223,7 @@
                     "type": "buy_me_a_coffee"
                 }
             ],
-            "time": "2026-01-15T01:58:38+00:00"
+            "time": "2026-02-01T07:42:03+00:00"
         },
         {
             "name": "brain/monkey",
@@ -1865,11 +1865,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.37",
+            "version": "2.1.38",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/28cd424c5ea984128c95cfa7ea658808e8954e49",
-                "reference": "28cd424c5ea984128c95cfa7ea658808e8954e49",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dfaf1f530e1663aa167bc3e52197adb221582629",
+                "reference": "dfaf1f530e1663aa167bc3e52197adb221582629",
                 "shasum": ""
             },
             "require": {
@@ -1914,7 +1914,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-24T08:21:55+00:00"
+            "time": "2026-01-30T17:12:46+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
