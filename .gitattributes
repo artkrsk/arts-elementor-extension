@@ -43,6 +43,7 @@ src/styles export-ignore
 
 # Markdown files except README.md
 /*.md export-ignore
+README.md -export-ignore
 .claude export-ignore
 .github export-ignore
 .taskmaster export-ignore
