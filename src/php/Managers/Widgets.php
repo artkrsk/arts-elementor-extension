@@ -136,11 +136,33 @@ class Widgets extends BaseManager {
 			return '';
 		}
 
+		if ( ! isset( $GLOBALS['__arts_elementor_widget_handlers'] ) ) {
+			$GLOBALS['__arts_elementor_widget_handlers'] = array();
+		}
+
 		$handler_strings = array();
 		foreach ( $this->instances as $widget ) {
-			if ( method_exists( $widget, 'get_elementor_editor_handler_js_string' ) ) {
-				$handler_strings[] = $widget->get_elementor_editor_handler_js_string();
+			if ( ! method_exists( $widget, 'get_elementor_editor_handler_js_string' ) ) {
+				continue;
 			}
+
+			$name = method_exists( $widget, 'get_name' ) ? $widget->get_name() : '';
+
+			if ( $name && in_array( $name, $GLOBALS['__arts_elementor_widget_handlers'], true ) ) {
+				continue;
+			}
+
+			$js = $widget->get_elementor_editor_handler_js_string();
+			if ( ! empty( $js ) ) {
+				$handler_strings[] = $js;
+				if ( $name ) {
+					$GLOBALS['__arts_elementor_widget_handlers'][] = $name;
+				}
+			}
+		}
+
+		if ( empty( $handler_strings ) ) {
+			return '';
 		}
 
 		return "
