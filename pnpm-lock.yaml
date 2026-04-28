@@ -7,6 +7,8 @@ settings:
 overrides:
   brace-expansion@>=2.0.0 <3.0.0: 2.1.0
   flatted: 3.4.2
+  follow-redirects: '>=1.16.0'
+  immutable@>=3.0.0 <4.0.0: 3.8.3
   js-yaml: '>=4.1.1'
   lodash: '>=4.18.0'
   minimatch@>=3.0.0 <4.0.0: 3.1.5
@@ -1541,8 +1543,8 @@ packages:
   flatted@3.4.2:
     resolution: {integrity: sha512-PjDse7RzhcPkIJwy5t7KPWQSZ9cAbzQXcafsetQoD7sOJRQlGikNbx7yZp2OotDnJyrDcbyRq3Ttb18iYOqkxA==}
 
-  follow-redirects@1.15.9:
-    resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
+  follow-redirects@1.16.0:
+    resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -1716,8 +1718,8 @@ packages:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
 
-  immutable@3.8.2:
-    resolution: {integrity: sha512-15gZoQ38eYjEjxkorfbcgBKBL6R7T459OuK+CpcWt7O3KF4uPCx2tD0uFETlUDIyo+1789crbMhTvQBSR5yBMg==}
+  immutable@3.8.3:
+    resolution: {integrity: sha512-AUY/VyX0E5XlibOmWt10uabJzam1zlYjwiEgQSDc5+UIkFNaF9WM0JxXKaNMGf+F/ffUF+7kRKXM9A7C0xXqMg==}
     engines: {node: '>=0.10.0'}
 
   immutable@5.1.5:
@@ -3709,7 +3711,7 @@ snapshots:
       async-each-series: 0.1.1
       chalk: 4.1.2
       connect-history-api-fallback: 1.6.0
-      immutable: 3.8.2
+      immutable: 3.8.3
       server-destroy: 1.0.1
       socket.io-client: 4.8.1
       stream-throttle: 0.1.3
@@ -3734,7 +3736,7 @@ snapshots:
       fresh: 0.5.2
       fs-extra: 3.0.1
       http-proxy: 1.18.1
-      immutable: 3.8.2
+      immutable: 3.8.3
       micromatch: 4.0.8
       opn: 5.3.0
       portscanner: 2.2.0
@@ -4386,7 +4388,7 @@ snapshots:
 
   flatted@3.4.2: {}
 
-  follow-redirects@1.15.9: {}
+  follow-redirects@1.16.0: {}
 
   foreground-child@3.3.1:
     dependencies:
@@ -4564,7 +4566,7 @@ snapshots:
   http-proxy@1.18.1:
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.9
+      follow-redirects: 1.16.0
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -4585,7 +4587,7 @@ snapshots:
 
   ignore@5.3.2: {}
 
-  immutable@3.8.2: {}
+  immutable@3.8.3: {}
 
   immutable@5.1.5: {}
 
