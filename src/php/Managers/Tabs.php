@@ -9,20 +9,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Elementor\Core\Kits\Documents\Kit;
 
 /**
- * Class Tabs
- *
  * @package Arts\ElementorExtension\Managers
  */
 class Tabs extends BaseManager {
 	/**
-	 * The tabs to register.
+	 * Tab definitions to register, each as { file?, class }.
 	 *
 	 * @var array<int, array{file?: string, class: class-string}>
 	 */
 	public $tabs = array();
 
 	/**
-	 * The tabs references.
+	 * Class names of successfully registered tabs, in registration order.
 	 *
 	 * @var array<int, class-string>
 	 */
@@ -43,9 +41,11 @@ class Tabs extends BaseManager {
 	}
 
 	/**
-	 * Register the tabs under `Site Settings` menu in the Elementor editor.
+	 * Hooked on `elementor/kit/register_tabs`. Requires each tab file, calls
+	 * Kit::register_tab() with the tab's TAB_ID, and finally wires
+	 * add_tab_live_settings() into the editor live-settings filter.
 	 *
-	 * @param Kit $kit The Elementor document instance.
+	 * @param Kit $kit The Elementor kit document.
 	 *
 	 * @return void
 	 */
@@ -54,7 +54,8 @@ class Tabs extends BaseManager {
 			return;
 		}
 
-		// Only require BaseTab if it's not already declared (prevents conflicts when multiple plugins/theme use this package)
+		// Guard against fatal "cannot redeclare class" when multiple Strauss-prefixed
+		// copies of the package are loaded by sibling plugins or the theme.
 		if ( ! class_exists( 'Arts\ElementorExtension\Tabs\BaseTab' ) ) {
 			$this->require_files();
 		}
@@ -77,16 +78,16 @@ class Tabs extends BaseManager {
 			$kit->register_tab( $tab['class']::TAB_ID, $tab['class'] );
 		}
 
-		// Allow developers to hook into the tabs registered event.
 		do_action( 'arts/elementor_extension/tabs/tabs_registered', $this->references, $this );
 		add_filter( 'arts/elementor_extension/editor/live_settings', array( $this, 'add_tab_live_settings' ) );
 	}
 
 	/**
-	 * Add tab live settings to the existing live settings array.
+	 * Filter callback that appends every tab's live-update control IDs to the
+	 * editor live-settings array.
 	 *
-	 * @param array<int, string> $live_settings The existing live settings.
-	 * @return array<int, string> The modified live settings with tab controls.
+	 * @param array<int, string> $live_settings
+	 * @return array<int, string>
 	 */
 	public function add_tab_live_settings( array $live_settings ): array {
 		$tab_live_controls = $this->get_tabs_live_controls();
@@ -97,16 +98,16 @@ class Tabs extends BaseManager {
 	}
 
 	/**
-	 * Get live controls from all registered tabs.
+	 * Collects EDITOR_CHANGE_CALLBACK_CONTROLS from every registered tab class
+	 * and returns the de-duplicated union.
 	 *
-	 * @return array<int, string> The array of live control IDs.
+	 * @return array<int, string>
 	 */
 	public function get_tabs_live_controls(): array {
 		/** @var array<int, string> $tabs_live_controls */
 		$tabs_live_controls = array();
 
 		foreach ( $this->tabs as $tab ) {
-			// Check if the constant exists and is an array
 			if ( defined( $tab['class'] . '::EDITOR_CHANGE_CALLBACK_CONTROLS' ) &&
 			is_array( $tab['class']::EDITOR_CHANGE_CALLBACK_CONTROLS ) &&
 			! empty( $tab['class']::EDITOR_CHANGE_CALLBACK_CONTROLS ) ) {

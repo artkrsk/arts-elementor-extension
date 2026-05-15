@@ -9,8 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Abstract base class for managers.
- * Extends Arts\Base for type safety and code reuse.
+ * Base for managers in this package. Overrides the framework init() to insert an
+ * apply_filters() step between property setup and manager wiring, and exposes
+ * a $require_files list that subclasses can load lazily via require_files().
  *
  * @property \Arts\ElementorExtension\Containers\ManagersContainer $managers
  *
@@ -18,17 +19,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 abstract class BaseManager extends ArtsBaseManager {
 	/**
-	 * Files to require manually for the manager.
+	 * Optional files the manager require_once()s on demand.
 	 *
 	 * @var array<int, string>
 	 */
 	protected $require_files = array();
 
 	/**
-	 * Initialize the manager with other managers.
-	 * Adds apply_filters hook before parent initialization.
+	 * Replaces the framework init() (does not call parent::init()): runs
+	 * init_properties(), then apply_filters(), then add_managers().
 	 *
-	 * @param \Arts\Base\Containers\ManagersContainer $managers Other managers.
+	 * @param \Arts\Base\Containers\ManagersContainer $managers
 	 * @return void
 	 */
 	public function init( $managers ): void {
@@ -38,17 +39,17 @@ abstract class BaseManager extends ArtsBaseManager {
 	}
 
 	/**
-	 * Apply filters to modify the values of class properties.
-	 * Can be overridden in child classes.
+	 * Extension point for filtering class properties after init_properties().
+	 * Override in subclasses; the default is a no-op.
 	 *
 	 * @return void
 	 */
 	protected function apply_filters(): void {
-		// Override in child classes if needed.
 	}
 
 	/**
-	 * Manually requires files specified in the $require_files property.
+	 * require_once()s every existing file declared in $require_files. Safe to
+	 * call multiple times — require_once handles deduplication.
 	 *
 	 * @return void
 	 */

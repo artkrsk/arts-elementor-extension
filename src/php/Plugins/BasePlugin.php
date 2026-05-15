@@ -9,9 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Abstract base class for Elementor-aware plugins.
- *
- * Extends the framework-agnostic BasePlugin with Elementor integration.
+ * Elementor-aware variant of the framework BasePlugin.
  *
  * @template TManagers of \Arts\Base\Containers\ManagersContainer
  * @extends ArtsBasePlugin<TManagers>
@@ -20,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 abstract class BasePlugin extends ArtsBasePlugin {
 	/**
-	 * Initializes Elementor Extension Plugin after run.
+	 * Boots the shared ArtsElementorExtension Plugin singleton alongside the consumer plugin.
 	 */
 	protected function do_run(): void {
 		\Arts\ElementorExtension\Plugin::instance();

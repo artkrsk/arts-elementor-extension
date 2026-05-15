@@ -86,7 +86,7 @@ class YourWidget extends BaseWidget {
 namespace YourNamespace\Widgets\Skins;
 
 use Arts\ElementorExtension\Widgets\BaseSkin;
-use Elementor\Controls_Manager;
+use Elementor\Widget_Base;
 
 class YourSkin extends BaseSkin {
   public function get_id() {
@@ -97,11 +97,11 @@ class YourSkin extends BaseSkin {
     return esc_html__('Your Skin', 'your-text-domain');
   }
 
-  public function register_controls(Controls_Stack $widget) {
+  public function register_controls(Widget_Base $widget) {
     // Register skin-specific controls
   }
 
-  public function render_skin() {
+  public function render_skin(): void {
     $settings = $this->parent->get_settings_for_display();
 
     // Your skin-specific rendering
@@ -215,13 +215,12 @@ class YourPlugin extends BasePlugin {
     ];
   }
 
-  protected function get_default_run_action() {
+  protected function get_default_run_action(): string {
     return 'elementor/init';
   }
 
-  protected function add_actions() {
+  protected function add_actions(): void {
     // Add custom actions
-    return $this;
   }
 }
 

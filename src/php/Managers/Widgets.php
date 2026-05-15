@@ -9,35 +9,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Elementor\Widgets_Manager;
 
 /**
- * Class Widgets
- *
  * @package Arts\ElementorExtension\Managers
  */
 class Widgets extends BaseManager {
 	/**
-	 * The categories for the widgets.
-	 *
 	 * @var array<string, mixed>
 	 */
 	public $categories = array();
 
 	/**
-	 * The widgets to register.
+	 * Widget definitions to register, each as { file, class }.
 	 *
 	 * @var array<int, array{file: string, class: class-string<\Elementor\Widget_Base>}>
 	 */
 	public $widgets = array();
 
 	/**
-	 * The widgets instances.
+	 * Cached widget instances built by instantiate().
 	 *
 	 * @var array<int, \Elementor\Widget_Base>
 	 */
 	public $instances = array();
 
 	/**
-	 * Files to require manually for the plugin.
-	 * Used on `elementor/widgets/register` action.
+	 * Base class files required up front so widget classes can extend them.
 	 *
 	 * @var array<int, string>
 	 */
@@ -57,7 +52,8 @@ class Widgets extends BaseManager {
 	}
 
 	/**
-	 * Register the widgets.
+	 * Hooked on `elementor/widgets/register`. Instantiates and registers every
+	 * configured widget, then fires arts/elementor_extension/widgets/widgets_registered.
 	 *
 	 * @param Widgets_Manager $widgets_manager The widgets manager.
 	 *
@@ -74,17 +70,20 @@ class Widgets extends BaseManager {
 			$widgets_manager->register( $widget );
 		}
 
-		// Allow developers to hook into the widgets registration event.
 		do_action( 'arts/elementor_extension/widgets/widgets_registered', $this->instances, $this );
 	}
 
+	/**
+	 * Loads widget files and builds one instance per configured widget.
+	 * Idempotent: subsequent calls return immediately once $instances is populated.
+	 */
 	public function instantiate(): void {
-		// If we've already instantiated widgets, don't do it again
 		if ( ! empty( $this->instances ) ) {
 			return;
 		}
 
-		// Only require base classes if they're not already declared (prevents conflicts when multiple plugins/theme use this package)
+		// Guard against fatal "cannot redeclare class" when multiple Strauss-prefixed
+		// copies of the package are loaded by sibling plugins or the theme.
 		if ( ! class_exists( 'Arts\ElementorExtension\Widgets\BaseWidget' ) || ! class_exists( 'Arts\ElementorExtension\Widgets\BaseSkin' ) ) {
 			$this->require_files();
 		}
@@ -110,6 +109,10 @@ class Widgets extends BaseManager {
 		}
 	}
 
+	/**
+	 * Hooked on `init`. Invokes add_init_action() on each widget instance that
+	 * implements it (used by BaseWidget to register WPML compatibility, etc.).
+	 */
 	public function add_init_actions(): void {
 		$this->instantiate();
 
@@ -125,9 +128,14 @@ class Widgets extends BaseManager {
 	}
 
 	/**
-	 * Generates JavaScript code to initialize Elementor widget handlers in the editor.
+	 * Returns a self-executing JS snippet that wires up each widget's editor handler
+	 * inside a single `elementor/frontend/init` listener.
 	 *
-	 * @return string JavaScript code to be included in the editor.
+	 * Uses a `$GLOBALS['__arts_elementor_widget_handlers']` ledger keyed by widget
+	 * name so that Strauss-prefixed sibling copies of this package can't emit
+	 * duplicate handler registrations for the same widget.
+	 *
+	 * @return string JS to inline after the widget-handler script. Empty when no handlers are produced.
 	 */
 	public function get_elementor_editor_js_string() {
 		$this->instantiate();
@@ -176,10 +184,8 @@ function onElementorInit() {
 	}
 
 	/**
-	 * Helper method to instantiate a widget class.
-	 *
 	 * @param class-string<\Elementor\Widget_Base> $class The widget class to instantiate.
-	 * @return \Elementor\Widget_Base The instantiated widget.
+	 * @return \Elementor\Widget_Base
 	 */
 	private function get_class_instance( string $class ): object {
 		try {

@@ -9,9 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Abstract base class for plugin managers.
- *
- * Extends the framework-agnostic BaseManager for use with Elementor plugins.
+ * Elementor-aware variant of the framework BaseManager.
  *
  * @package Arts\ElementorExtension\Plugins
  */

@@ -13,9 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Typed managers container for ArtsElementorExtension.
- *
- * Provides type-safe access to all managers.
+ * Typed managers container — exists purely to give static analyzers and IDEs
+ * the concrete property types for each manager attached at runtime.
  *
  * @property Categories $categories
  * @property Editor $editor

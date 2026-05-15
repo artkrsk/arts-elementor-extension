@@ -17,14 +17,15 @@ abstract class BaseWidget extends Widget_Base {
 	use Traits\WPML;
 
 	/**
-	 * Instances of the class.
+	 * Per-subclass instance cache used by instance().
 	 *
 	 * @var array<class-string, static>
 	 */
 	private static $instances = array();
 
 	/**
-	 * Static fields
+	 * Field names rendered by get_static_fields_repeater_controls(). Override
+	 * in subclasses to restrict the set of pre-built repeater fields.
 	 *
 	 * @var array<int, string>
 	 */
@@ -40,16 +41,17 @@ abstract class BaseWidget extends Widget_Base {
 	);
 
 	/**
-	 * Allowed HTML tags for wp_kses.
+	 * Lazily populated by instance(): the wp_kses allowed-HTML map used by wp_kses_e().
 	 *
 	 * @var array<string, array<string, bool|string>>
 	 */
 	public static $allowed_html = array();
 
 	/**
-	 * Get the instance of this class.
+	 * Returns (and lazily creates) a singleton instance per concrete widget class,
+	 * and on first access populates self::$allowed_html from wp_kses_allowed_html('post').
 	 *
-	 * @return static The instance of this class.
+	 * @return static
 	 */
 	public static function instance() {
 		$cls = static::class;
@@ -69,7 +71,8 @@ abstract class BaseWidget extends Widget_Base {
 	}
 
 	/**
-	 * Add actions before rendering the widget.
+	 * Called from before_render(). Registers preload filters and the subclass
+	 * extension point add_custom_actions().
 	 *
 	 * @return void
 	 */
@@ -78,111 +81,102 @@ abstract class BaseWidget extends Widget_Base {
 		$this->add_custom_actions();
 	}
 
+	/**
+	 * Called from Widgets manager on `init`. Wires WPML compatibility and the
+	 * subclass extension point add_custom_init_actions().
+	 */
 	public function add_init_action(): void {
 		$this->add_wpml_compatibility();
 		$this->add_custom_init_actions();
 	}
 
+	/** Extension point invoked on `init`. Override in subclasses. */
 	public function add_custom_init_actions(): void {
-		// Override this method in the widget class
 	}
 
 	/**
-	 * Add custom actions before rendering the widget.
+	 * Extension point invoked before render. Override in subclasses.
 	 *
 	 * @return void
 	 */
 	public function add_custom_actions() {
-		// Override this method in the widget class
 	}
 
 	/**
-	 * Get widget name.
+	 * Subclasses must override to return their Elementor widget name.
 	 *
-	 * @return string The widget name.
+	 * @return string
 	 */
 	public function get_name() {
-		// Override this method in the widget class
-
 		return '';
 	}
 
 	/**
-	 * Get widget title.
+	 * Subclasses must override to return the human-readable widget title.
 	 *
-	 * @return string The widget title.
+	 * @return string
 	 */
 	public function get_title() {
-		// Override this method in the widget class
-
 		return '';
 	}
 
 	/**
-	 * Get widget icon.
-	 *
-	 * @return string The widget icon.
+	 * @return string
 	 */
 	public function get_icon() {
 		return 'eicon-plug';
 	}
 
 	/**
-	 * Get widget categories.
-	 *
-	 * @return array<int, string> The widget categories.
+	 * @return array<int, string>
 	 */
 	public function get_categories(): array {
 		return array( 'custom-category' );
 	}
 
 	/**
-	 * Get current skin ID.
-	 *
-	 * @return string The current skin ID.
+	 * @return string
 	 */
 	public function get_current_skin_id() {
 		return parent::get_current_skin_id();
 	}
 
 	/**
-	 * Get repeater setting key.
-	 *
-	 * @param string $setting_key  The setting key.
-	 * @param string $repeater_key The repeater key.
-	 * @param int    $index        The item index.
-	 * @return string The unique setting key.
+	 * @param string $setting_key
+	 * @param string $repeater_key
+	 * @param int    $index
+	 * @return string
 	 */
 	public function get_repeater_setting_key( $setting_key, $repeater_key, $index ) {
 		return parent::get_repeater_setting_key( $setting_key, $repeater_key, $index );
 	}
 
 	/**
-	 * Whether the element returns dynamic content.
-	 * Set to determine whether to cache the element output or not.
+	 * Elementor checks this to decide whether the rendered HTML can be cached.
+	 * Returning true forces fresh output on every render.
 	 *
-	 * @return bool Whether to cache the element output.
+	 * @return bool
 	 */
 	protected function is_dynamic_content(): bool {
 		return true;
 	}
 
 	/**
-	 * Whether the element has an inner wrapper.
-	 * Set to determine whether to wrap the element with an inner wrapper or not.
+	 * Whether Elementor should add the inner `.elementor-widget-container` wrapper.
+	 * Disabled automatically when the `e_optimized_markup` experiment is on.
 	 *
-	 * @return bool Whether the element has an inner wrapper.
+	 * @return bool
 	 */
 	public function has_widget_inner_wrapper(): bool {
 		return ! Utilities::is_elementor_feature_active( 'e_optimized_markup' );
 	}
 
 	/**
-	 * Get static fields repeater controls.
+	 * Builds a Repeater control set for the subset of $data_static_fields the
+	 * subclass opted into. Field-specific defaults match Elementor placeholders
+	 * (e.g. Utils::get_placeholder_image_src() for image fields).
 	 *
-	 * This method initializes and returns the repeater controls based on the static fields set.
-	 *
-	 * @return array<string, mixed> Repeater controls.
+	 * @return array<string, mixed>
 	 */
 	protected function get_static_fields_repeater_controls(): array {
 		$repeater   = new Repeater();
@@ -340,13 +334,14 @@ abstract class BaseWidget extends Widget_Base {
 	}
 
 	/**
-	 * Retrieve the value of a specified option.
+	 * Looks up a setting in get_settings_for_display(). If the value is an array
+	 * with a 'size' key (Slider-style controls), $return_size unwraps it.
 	 *
-	 * @param string $option The option name.
-	 * @param string $group_control_prefix Optional. The prefix for group control. Default is ''.
-	 * @param bool   $return_size Optional. Whether to return the size if available. Default is true.
+	 * @param string $option              Setting key.
+	 * @param string $group_control_prefix Prefix prepended to $option (for group controls).
+	 * @param bool   $return_size         When true, unwrap `size` from array-shaped values.
 	 *
-	 * @return mixed The option value or false if not found.
+	 * @return mixed The setting value, or `false` if the key is missing.
 	 */
 	public function get_option_value( $option, $group_control_prefix = '', $return_size = true ) {
 		$settings = $this->get_settings_for_display();
@@ -365,7 +360,8 @@ abstract class BaseWidget extends Widget_Base {
 	}
 
 	/**
-	 * Register custom controls for the widget.
+	 * Splits the standard Elementor control registration into four per-tab
+	 * extension points so subclasses don't need to interleave tabs.
 	 *
 	 * @return void
 	 */
@@ -377,47 +373,44 @@ abstract class BaseWidget extends Widget_Base {
 	}
 
 	/**
-	 * Register the widget controls under `Content` tab.
+	 * Extension point for the Content tab. Override in subclasses.
 	 *
-	 * @param string $tab The tab ID.
+	 * @param string $tab Tab ID to pass into start_controls_section().
 	 * @return void
 	 */
 	protected function register_controls_content( string $tab ): void {
-		// Override this method in the widget class
 	}
 
 	/**
-	 * Register the widget controls under `Settings` tab.
+	 * Extension point for the Settings tab. Override in subclasses.
 	 *
-	 * @param string $tab The tab ID.
+	 * @param string $tab Tab ID to pass into start_controls_section().
 	 * @return void
 	 */
 	protected function register_controls_settings( string $tab ): void {
-		// Override this method in the widget class
 	}
 
 	/**
-	 * Register the widget controls under `Layout` tab.
+	 * Extension point for the Layout tab. Override in subclasses.
 	 *
-	 * @param string $tab The tab ID.
+	 * @param string $tab Tab ID to pass into start_controls_section().
 	 * @return void
 	 */
 	protected function register_controls_layout( string $tab ): void {
-		// Override this method in the widget class
 	}
 
 	/**
-	 * Register the widget controls under `Style` tab.
+	 * Extension point for the Style tab. Override in subclasses.
 	 *
-	 * @param string $tab The tab ID.
+	 * @param string $tab Tab ID to pass into start_controls_section().
 	 * @return void
 	 */
 	protected function register_controls_style( string $tab ): void {
-		// Override this method in the widget class
 	}
 
 	/**
-	 * Add actions before rendering the widget.
+	 * Elementor render entry point. Runs add_actions() (so subclasses can wire
+	 * preloads/filters just before output) and opens the widget wrapper element.
 	 *
 	 * @return void
 	 */
@@ -429,7 +422,8 @@ abstract class BaseWidget extends Widget_Base {
 	}
 
 	/**
-	 * Outputs sanitized HTML content using wp_kses.
+	 * Echoes $text through wp_kses() with the static $allowed_html map populated
+	 * by instance(). Requires instance() to have been called first.
 	 *
 	 * @param string $text The text to be sanitized and echoed.
 	 */

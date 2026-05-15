@@ -1,6 +1,5 @@
 'use strict'
 ;(function () {
-  // Elementor editor
   window.addEventListener('elementor/frontend/init', onElementorInit, {
     once: true
   })

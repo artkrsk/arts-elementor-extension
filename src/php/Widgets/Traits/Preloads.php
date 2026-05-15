@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 trait Preloads {
 	/**
-	 * Add preload links from the widget for improving the performance.
-	 * Hooks into filters of `ArtsOptimizer` plugin.
+	 * Wires this widget's get_preload_* maps into the ArtsOptimizer filter chain
+	 * for assets, modules, images and prefetch URLs.
 	 *
 	 * @return void
 	 */
@@ -21,49 +21,51 @@ trait Preloads {
 	}
 
 	/**
-	 * Add preload assets to the given map.
+	 * Filter callback that merges get_preload_assets_map() into the assets map.
 	 *
-	 * @param array<string, mixed> $map The existing assets map.
-	 * @return array<string, mixed> The modified assets map with preload assets.
+	 * @param array<string, mixed> $map
+	 * @return array<string, mixed>
 	 */
 	public function add_preload_assets( array $map ): array {
 		return array_merge( $map, $this->get_preload_assets_map() );
 	}
 
 	/**
-	 * Add preload images to the given map.
+	 * Filter callback that merges get_preload_images_map() into the images map.
 	 *
-	 * @param array<string, mixed> $map The existing images map.
-	 * @return array<string, mixed> The modified images map with preload images.
+	 * @param array<string, mixed> $map
+	 * @return array<string, mixed>
 	 */
 	public function add_preload_images( array $map ): array {
 		return array_merge( $map, $this->get_preload_images_map() );
 	}
 
 	/**
-	 * Add preload JS modules to the given map.
+	 * Filter callback that merges get_preload_modules_map() into the modules map.
 	 *
-	 * @param array<string, mixed> $map The existing modules map.
-	 * @return array<string, mixed> The modified modules map with preload modules.
+	 * @param array<string, mixed> $map
+	 * @return array<string, mixed>
 	 */
 	public function add_preload_modules( array $map ): array {
 		return array_merge( $map, $this->get_preload_modules_map() );
 	}
 
 	/**
-	 * Add prefetch URLs to the given map.
+	 * Filter callback that merges get_prefetch_map() into the prefetch map.
 	 *
-	 * @param array<string, mixed> $map The existing prefetch map.
-	 * @return array<string, mixed> The modified prefetch map with prefetch URLs.
+	 * @param array<string, mixed> $map
+	 * @return array<string, mixed>
 	 */
 	public function add_prefetch( array $map ): array {
 		return array_merge( $map, $this->get_prefetch_map() );
 	}
 
 	/**
-	 * Get the map of preload assets.
+	 * Builds the preload assets map from the active skin's get_frontend_files()
+	 * if it exposes one. Returns an empty map when no skin is active or the
+	 * skin doesn't define frontend files.
 	 *
-	 * @return array<string, mixed> The preload assets map.
+	 * @return array<string, mixed>
 	 */
 	protected function get_preload_assets_map(): array {
 		$skin = $this->get_current_skin();
@@ -90,27 +92,29 @@ trait Preloads {
 	}
 
 	/**
-	 * Get the map of preload images.
+	 * Extension point — subclasses override to declare preloaded images.
 	 *
-	 * @return array<string, mixed> The preload images map.
+	 * @return array<string, mixed>
 	 */
 	protected function get_preload_images_map(): array {
 		return array();
 	}
 
 	/**
-	 * Get the map of preload JS modules.
+	 * Extension point — subclasses override to declare preloaded JS modules.
 	 *
-	 * @return array<string, mixed> The preload modules map.
+	 * @return array<string, mixed>
 	 */
 	protected function get_preload_modules_map(): array {
 		return array();
 	}
 
 	/**
-	 * Get the map of prefetch URLs.
+	 * Default prefetch map: when the widget exposes get_posts_to_display() and
+	 * the first post carries a non-empty `video.url`, prefetch that URL keyed by
+	 * "Widget_Video_<widget-id>".
 	 *
-	 * @return array<string, mixed> The prefetch map.
+	 * @return array<string, mixed>
 	 */
 	protected function get_prefetch_map(): array {
 		$map = array();

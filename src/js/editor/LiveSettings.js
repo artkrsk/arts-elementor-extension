@@ -1,17 +1,11 @@
 import { debounce } from '@arts/utilities'
 
 /**
- * Elementor Editor Live Settings
- * Handles live settings changes in the Elementor editor
- */
-
-/**
- * LiveSettings class for handling Elementor editor settings changes
+ * Bridges Elementor editor setting changes and preview-iframe size changes
+ * into CustomEvents the preview frame can listen for. One instance per editor
+ * session — exposed as a default-export factory at the bottom of this file.
  */
 class LiveSettings {
-  /**
-   * Creates an instance of LiveSettings
-   */
   constructor() {
     this.elementorInstance = null
     this.previewWindow = null
@@ -20,21 +14,21 @@ class LiveSettings {
   }
 
   /**
-   * Initializes the live settings module
+   * Captures the elementor instance and defers DOM-dependent wiring to the
+   * first `preview:loaded` event so the preview iframe is available.
+   *
    * @param {Object} elementor - The Elementor object
    * @returns {Object} - Public API methods
    */
   init(elementor) {
     this.elementorInstance = elementor
 
-    // Initialize when preview is loaded
     this.elementorInstance.once('preview:loaded', () => {
       this.setWindow()
       this.addSettingsChangeCallbacks()
       this.addReloadPreviewListener()
     })
 
-    // Return public API
     return {
       updatePreview: this.updatePreview.bind(this),
       reloadPreview: this.reloadPreview.bind(this),
@@ -43,23 +37,23 @@ class LiveSettings {
     }
   }
 
-  /**
-   * Sets the preview window reference
-   * @private
-   */
+  /** @private */
   setWindow() {
     this.previewWindow = this.elementorInstance.$preview.get(0).contentWindow
     this.initResizeObserver()
   }
 
   /**
-   * Initializes the ResizeObserver to watch for preview window size changes
+   * Observes both the preview iframe's document.body and the outer
+   * #elementor-preview wrapper, debouncing emissions of
+   * `arts/elementor_extension/editor/preview_resized` by 300ms to avoid
+   * thrashing during drag-resize.
+   *
    * @private
    */
   initResizeObserver() {
     if (!this.previewWindow) return
 
-    // Create debounced function for resize events
     this.debouncedResizeEmit = debounce((entries) => {
       const entry = entries[0]
       if (entry) {
@@ -72,10 +66,8 @@ class LiveSettings {
       }
     }, 300)
 
-    // Create ResizeObserver
     this.resizeObserver = new ResizeObserver(this.debouncedResizeEmit)
 
-    // Observe the preview window's document body
     if (this.previewWindow.document && this.previewWindow.document.body) {
       this.resizeObserver.observe(this.previewWindow.document.body)
     }
@@ -87,10 +79,7 @@ class LiveSettings {
     }
   }
 
-  /**
-   * Disconnects the ResizeObserver
-   * @private
-   */
+  /** @private */
   disconnectResizeObserver() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect()
@@ -100,24 +89,22 @@ class LiveSettings {
   }
 
   /**
-   * Sets up callbacks for settings changes
+   * Subscribes to Elementor page settings changes for the control IDs that PHP
+   * localized into `window.artsElementorExtensionEditorLiveSettings`.
+   *
    * @private
    */
   addSettingsChangeCallbacks() {
     const { addChangeCallback } = this.elementorInstance.settings.page
 
-    // Get settings from the global variable or use empty array as fallback
-    // This variable should be localized by WordPress
     const tabsControls = window.artsElementorExtensionEditorLiveSettings || []
 
-    // Bind the method to this instance
     tabsControls.forEach((setting) =>
       addChangeCallback(setting, (value) => this.onSettingChange(setting, value))
     )
   }
 
   /**
-   * Handles setting change events
    * @param {string} setting - The setting that changed
    * @param {*} value - The new value
    * @private
@@ -133,7 +120,10 @@ class LiveSettings {
   }
 
   /**
-   * Adds event listener for reload preview event
+   * Reattaches the `arts/elementor_extension/editor/reload_preview` listener on
+   * the preview window. The prior listener is removed first so repeated calls
+   * (e.g. after preview reloads) don't stack handlers.
+   *
    * @private
    */
   addReloadPreviewListener() {
@@ -150,23 +140,22 @@ class LiveSettings {
   }
 
   /**
-   * Handles reload preview event
    * @param {CustomEvent} event - The event object
    * @private
    */
   onReloadPreview(event) {
-    // Check if event.detail exists
     const detail = event.detail || {}
-
-    // Extract route and section with default values (undefined)
     const { route, section } = detail
 
-    // Pass to reloadPreview - the function already has proper handling for undefined values
     this.reloadPreview(route, section)
   }
 
   /**
-   * Updates the preview
+   * Triggers an Elementor `preview/reload` and — after the next `preview:loaded`
+   * — restores panel state: if a `panel/global/...` route is active, reopens it;
+   * otherwise navigates to `route` (when provided) and activates `section`
+   * inside the current page view.
+   *
    * @param {string} route - The route to navigate to
    * @param {string} section - The section to activate
    * @public
@@ -204,7 +193,9 @@ class LiveSettings {
   }
 
   /**
-   * Reloads the preview
+   * Sets the editor loading state, runs `document/save/update`, then defers to
+   * updatePreview() to reload and restore panel state.
+   *
    * @param {string} route - The route to navigate to after reload
    * @param {string} section - The section to activate after reload
    * @public
@@ -217,9 +208,11 @@ class LiveSettings {
   }
 
   /**
-   * Emits an event to the preview window
-   * @param {string} eventName - The name of the event
-   * @param {Object} data - The data to send with the event
+   * Dispatches a CustomEvent into the preview iframe. No-op until the preview
+   * window has been captured by setWindow().
+   *
+   * @param {string} eventName
+   * @param {Object} data - Becomes event.detail
    * @public
    */
   emitEvent(eventName, data) {
@@ -232,16 +225,12 @@ class LiveSettings {
     }
   }
 
-  /**
-   * Disconnects all observers and cleans up resources
-   * @public
-   */
+  /** @public */
   disconnect() {
     this.disconnectResizeObserver()
   }
 }
 
-// Create and export a singleton instance
 export default {
   init: (elementor) => new LiveSettings().init(elementor)
 }

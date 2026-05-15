@@ -14,17 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class Plugin
- *
  * @package Arts\ElementorExtension
  * @extends BasePlugin<ManagersContainer>
  */
 class Plugin extends BasePlugin {
 
 	/**
-	 * Get default configuration.
-	 * Called during initialization.
-	 *
 	 * @return array<string, mixed>
 	 */
 	protected function get_default_config(): array {
@@ -35,9 +30,6 @@ class Plugin extends BasePlugin {
 	}
 
 	/**
-	 * Get default strings.
-	 * Called during initialization.
-	 *
 	 * @return array<string, string>
 	 */
 	protected function get_default_strings(): array {
@@ -47,8 +39,6 @@ class Plugin extends BasePlugin {
 	}
 
 	/**
-	 * Get manager classes to initialize.
-	 *
 	 * @return array<string, class-string>
 	 */
 	protected function get_managers_classes(): array {
@@ -61,8 +51,8 @@ class Plugin extends BasePlugin {
 	}
 
 	/**
-	 * Get the WordPress action hook on which to run the plugin.
-	 * Return empty string to run immediately.
+	 * WordPress action hook that gates plugin execution.
+	 * Return empty string to run immediately without hooking.
 	 *
 	 * @return string
 	 */
@@ -71,8 +61,7 @@ class Plugin extends BasePlugin {
 	}
 
 	/**
-	 * Initialize the managers container.
-	 * Uses custom typed container for type safety.
+	 * Override to install the typed ManagersContainer (gives properties type-safe access).
 	 *
 	 * @return void
 	 */
@@ -81,19 +70,18 @@ class Plugin extends BasePlugin {
 	}
 
 	/**
-	 * Hook called after managers are initialized.
-	 * Used for validation checks.
+	 * Runs after managers are initialized but before run() is hooked.
+	 * Validates Elementor presence, Elementor version and PHP version; on failure
+	 * queues an admin notice and short-circuits the remaining checks.
 	 *
 	 * @return void
 	 */
 	protected function do_after_init_managers(): void {
-		// Check if Elementor is installed and activated
 		if ( ! did_action( 'elementor/loaded' ) ) {
 			add_action( 'admin_notices', array( $this, 'admin_notice_missing_main_plugin' ) );
 			return;
 		}
 
-		// Check for required Elementor version
 		$required_elementor_version = $this->config['required_elementor_version'] ?? '3.18';
 		assert( is_string( $required_elementor_version ) );
 		if ( ! defined( 'ELEMENTOR_VERSION' ) ||
@@ -102,7 +90,6 @@ class Plugin extends BasePlugin {
 			return;
 		}
 
-		// Check for required PHP version
 		$required_php_version = $this->config['required_php_version'] ?? '7.4';
 		assert( is_string( $required_php_version ) );
 		if ( version_compare( PHP_VERSION, $required_php_version, '<' ) ) {
@@ -112,34 +99,22 @@ class Plugin extends BasePlugin {
 	}
 
 	/**
-	 * Add WordPress actions.
-	 * Called when run() action fires (after elementor/loaded).
+	 * Registers WordPress actions for the plugin.
+	 * Invoked from BasePlugin::run() once the run_action hook (elementor/loaded) fires.
 	 *
 	 * @return void
 	 */
 	protected function add_actions(): void {
-		// Register extra categories for Elementor widgets
 		add_action( 'elementor/elements/categories_registered', array( $this->managers->categories, 'register' ) );
-
-		// Register extra Elementor widgets
 		add_action( 'elementor/widgets/register', array( $this->managers->widgets, 'register' ) );
-
-		// Register extra Elementor widgets init actions
 		add_action( 'init', array( $this->managers->widgets, 'add_init_actions' ) );
-
-		// Register extra tabs in Elementor Site Settings
 		add_action( 'elementor/kit/register_tabs', array( $this->managers->tabs, 'register' ) );
-
-		// Enqueue scripts
 		add_action( 'elementor/editor/after_enqueue_scripts', array( $this->managers->editor, 'enqueue_live_settings_script' ) );
 		add_action( 'wp_enqueue_scripts', array( $this->managers->editor, 'enqueue_widget_handler_script' ) );
 	}
 
 	/**
-	 * Display an admin notice if Elementor is not installed or activated.
-	 *
-	 * Constructs a warning message indicating that the plugin requires Elementor
-	 * to be installed and activated, and displays this message as a dismissible admin notice.
+	 * Echoes a dismissible admin notice warning that Elementor is missing.
 	 *
 	 * @return void
 	 */
@@ -159,10 +134,7 @@ class Plugin extends BasePlugin {
 	}
 
 	/**
-	 * Display an admin notice if the installed Elementor version is not compatible with the plugin.
-	 *
-	 * Constructs a warning message indicating that the plugin requires a newer version of Elementor
-	 * to be installed and activated, and displays this message as a dismissible admin notice.
+	 * Echoes a dismissible admin notice warning that the installed Elementor version is below the required minimum.
 	 *
 	 * @return void
 	 */
@@ -185,10 +157,7 @@ class Plugin extends BasePlugin {
 	}
 
 	/**
-	 * Display an admin notice if the installed PHP version is not compatible with the plugin.
-	 *
-	 * Constructs a warning message indicating that the plugin requires a newer version of PHP
-	 * to be installed and activated, and displays this message as a dismissible admin notice.
+	 * Echoes a dismissible admin notice warning that the installed PHP version is below the required minimum.
 	 *
 	 * @return void
 	 */

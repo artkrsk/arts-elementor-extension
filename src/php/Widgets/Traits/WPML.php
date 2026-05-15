@@ -8,7 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 trait WPML {
 	/**
-	 * Add ability to translate the widget text fields using WPML plugin.
+	 * Hooks filter_wpml_widgets_to_translate() into WPML's
+	 * `wpml_elementor_widgets_to_translate` filter.
 	 *
 	 * @return void
 	 */
@@ -17,10 +18,11 @@ trait WPML {
 	}
 
 	/**
-	 * Filter the Elementor widgets for translation in WPML.
+	 * Adds (or overwrites) this widget's translation config in the WPML widget map.
+	 * Keyed by widget name so WPML can match the entry to widgets at render time.
 	 *
-	 * @param array<string, mixed> $widgets The existing widgets.
-	 * @return array<string, mixed> The modified widgets with translatable fields and integration class.
+	 * @param array<string, mixed> $widgets
+	 * @return array<string, mixed>
 	 */
 	public function filter_wpml_widgets_to_translate( array $widgets ): array {
 		$name = $this->get_name();
@@ -35,25 +37,22 @@ trait WPML {
 	}
 
 	/**
-	 * Get an array of translatable widget fields.
+	 * Subclasses override to return the per-field translation descriptors
+	 * (`field`, `type`, `editor_type`) consumed by WPML.
 	 *
-	 * @return array<int, array<string, mixed>> An array of translatable fields.
+	 * @return array<int, array<string, mixed>>
 	 */
 	protected function wpml_get_translatable_fields(): array {
-		// Override this method in the widget class.
-
 		return array();
 	}
 
 	/**
-	 * Get the integration class name for the widget.
-	 * Can be used to translate `\Elementor\Repeater` controls and other complex fields.
+	 * Subclasses override to return a WPML integration class name when the
+	 * default field-based translation isn't enough (e.g. repeater fields).
 	 *
-	 * @return string|null The integration class name.
+	 * @return string|null
 	 */
 	protected function wpml_get_integration_class_name() {
-		// Override this method in the widget class.
-
 		return null;
 	}
 }

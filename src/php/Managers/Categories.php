@@ -9,13 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Elementor\Elements_Manager;
 
 /**
- * Class Categories
- *
  * @package Arts\ElementorExtension\Managers
  */
 class Categories extends BaseManager {
 	/**
-	 * The categories for the widgets.
+	 * Widget category definitions, each as { name, title, icon? }.
 	 *
 	 * @var array<int, array{name: string, title: string, icon?: string}>
 	 */
@@ -32,9 +30,11 @@ class Categories extends BaseManager {
 	}
 
 	/**
-	 * Register the categories.
+	 * Hooked on `elementor/elements/categories_registered`. Adds every configured
+	 * category through Elements_Manager::add_category() and fires
+	 * arts/elementor_extension/widgets/categories_registered.
 	 *
-	 * @param Elements_Manager $elements_manager The elements manager.
+	 * @param Elements_Manager $elements_manager
 	 *
 	 * @return void
 	 */
@@ -60,7 +60,6 @@ class Categories extends BaseManager {
 			$elements_manager->add_category( $category_name, $category_properties );
 		}
 
-		// Allow developers to hook into the categories registration event.
 		do_action( 'arts/elementor_extension/widgets/categories_registered', $this->categories, $this );
 	}
 }

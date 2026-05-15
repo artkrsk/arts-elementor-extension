@@ -11,13 +11,12 @@ use Elementor\Core\Base\Document;
 use Elementor\Controls_Manager;
 
 abstract class BaseTab extends Tab_Base {
-	/**
-	 * The tab ID.
-	 *
-	 * @var string
-	 */
+	/** @var string */
 	const TAB_ID = 'arts-elementor-extension-custom-tab';
 
+	/**
+	 * Control types whose values get synced to the database via before_save().
+	 */
 	const SYNC_CONTROL_TYPES = array(
 		Controls_Manager::TEXT,
 		Controls_Manager::TEXTAREA,
@@ -30,15 +29,13 @@ abstract class BaseTab extends Tab_Base {
 	);
 
 	/**
-	 * List of controls that will be available for adding the change callback in the Elementor editor.
+	 * Controls that opt into the editor live-settings change callback.
 	 *
 	 * @var array<int, string>
 	 */
 	const EDITOR_CHANGE_CALLBACK_CONTROLS = array();
 
 	/**
-	 * Get the tab ID.
-	 *
 	 * @return string
 	 */
 	public function get_id() {
@@ -46,8 +43,6 @@ abstract class BaseTab extends Tab_Base {
 	}
 
 	/**
-	 * Get the tab title.
-	 *
 	 * @return string
 	 */
 	public function get_title() {
@@ -55,8 +50,6 @@ abstract class BaseTab extends Tab_Base {
 	}
 
 	/**
-	 * Get the tab icon.
-	 *
 	 * @return string
 	 */
 	public function get_icon() {
@@ -64,25 +57,22 @@ abstract class BaseTab extends Tab_Base {
 	}
 
 	/**
-	 * Get the group of the tab.
+	 * Returns the group the tab is rendered under in the Elementor kit panel.
+	 * Elementor registers these groups by default:
 	 *
-	 * Returns the group to which the tab belongs.
-	 * By default Elementor registers the following groups:
+	 *   "Design System"   - `global`
+	 *   "Theme Style"     - `theme-style`
+	 *   "Site Settings"   - `settings`
 	 *
-	 * "Design System" - `global`
-	 *
-	 * "Theme Style" - `theme-style`
-	 *
-	 * "Site Settings" - `settings`
-	 *
-	 * @return string 'global' | 'theme-style' | 'settings' The group of the tab.
+	 * @return string 'global' | 'theme-style' | 'settings'
 	 */
 	public function get_group() {
 		return 'settings';
 	}
 
 	/**
-	 * Register controls for the tab.
+	 * Elementor entry point for control registration.
+	 * Wraps register_tab_controls() with before/after extension hooks.
 	 *
 	 * @return void
 	 */
@@ -93,21 +83,27 @@ abstract class BaseTab extends Tab_Base {
 		$this->after_register_tab();
 	}
 
+	/**
+	 * Extension point invoked before register_tab_controls(). Override in subclasses.
+	 */
 	protected function before_register_tab(): void {
-		// Action to be performed before registering the tab.
-	}
-
-	protected function after_register_tab(): void {
-		// Action to be performed before registering the tab.
 	}
 
 	/**
-	 * Handle the save action for Elementor settings and syncs the data to the database.
-	 * This method is called when the user clicks the "Save & Close" button in the Elementor settings.
+	 * Extension point invoked after register_tab_controls(). Override in subclasses.
+	 */
+	protected function after_register_tab(): void {
+	}
+
+	/**
+	 * Hooked by Elementor on document save. For each control declared with
+	 * `save_db => 'option'` and whose type is in SYNC_CONTROL_TYPES, copies the
+	 * submitted value into the matching WordPress option via update_option().
+	 * Skips work entirely when the document is not transitioning to `publish`.
 	 *
 	 * @param array<string, mixed> $data The data to be saved.
 	 *
-	 * @return array<string, mixed> $data The data to be saved.
+	 * @return array<string, mixed> The (unmodified) data, returned so Elementor can continue the save pipeline.
 	 */
 	public function before_save( array $data ): array {
 		if ( ! isset( $data['settings'] ) ||
@@ -230,24 +226,22 @@ abstract class BaseTab extends Tab_Base {
 	}
 
 	/**
-	 * Filter the value to sync from Elementor to Customizer.
+	 * Converts an Elementor control value into the shape stored in the Customizer.
+	 * Maps Switcher 'yes'/'' → bool, and unwraps Slider arrays to their `size`.
 	 *
 	 * @param mixed $val The value to filter.
 	 *
-	 * @return mixed Filtered value.
+	 * @return mixed
 	 */
 	public function filter_value_elementor_to_customizer( $val ) {
-		// Switcher control
 		if ( $val === 'yes' ) {
 			return true;
 		}
 
-		// Switcher control
 		if ( $val === '' ) {
 			return false;
 		}
 
-		// Slider control
 		if ( is_array( $val ) ) {
 			if ( array_key_exists( 'size', $val ) ) {
 				return $val['size'];
@@ -258,15 +252,15 @@ abstract class BaseTab extends Tab_Base {
 	}
 
 	/**
-	 * Filter the value to sync from Customizer to Elementor.
+	 * Inverse of filter_value_elementor_to_customizer(): re-shapes a value coming
+	 * from the Customizer for use by an Elementor control of the given type.
 	 *
 	 * @param mixed  $val  The value to filter.
 	 * @param string $type The control type.
 	 *
-	 * @return mixed Filtered value.
+	 * @return mixed
 	 */
 	public function filter_value_from_customizer_to_elementor( $val, $type ) {
-		// Switcher control
 		if ( $type === Controls_Manager::SWITCHER ) {
 			if ( $val === true ) {
 				return 'yes';
@@ -279,7 +273,8 @@ abstract class BaseTab extends Tab_Base {
 	}
 
 	/**
-	 * Add a refresh notice control to the Elementor settings.
+	 * Adds a RAW_HTML notice with a "Save and Reload" link that triggers
+	 * `document/save/default` and then `preview/reload` from the editor.
 	 *
 	 * @return void
 	 */

@@ -11,15 +11,14 @@ use Arts\ElementorExtension\Widgets\BaseWidget;
 
 abstract class BaseSkin extends Skin_Base {
 	/**
-	 * The parent widget instance.
+	 * Narrows the inherited Skin_Base::$parent property type to BaseWidget for
+	 * static analysis. Subclasses must be attached to a BaseWidget descendant.
 	 *
 	 * @var BaseWidget
 	 */
 	protected $parent;
 
 	/**
-	 * Constructor.
-	 *
 	 * @param \Elementor\Widget_Base $parent The parent widget.
 	 */
 	public function __construct( \Elementor\Widget_Base $parent ) {
@@ -29,51 +28,51 @@ abstract class BaseSkin extends Skin_Base {
 	abstract public function render_skin(): void;
 
 	/**
-	 * Filter the preload assets map from a skin.
+	 * Extension point for the `arts/optimizer/preloads/assets_map` filter.
 	 *
-	 * @param array<string, mixed> $map The existing assets map.
-	 * @return array<string, mixed> The modified assets map with preload assets.
+	 * @param array<string, mixed> $map Existing assets map.
+	 * @return array<string, mixed>
 	 */
 	public function add_filter_preload_assets_map( array $map ): array {
 		return $map;
 	}
 
 	/**
-	 * Filter the preload images map from a skin.
+	 * Extension point for the `arts/optimizer/preloads/images_map` filter.
 	 *
-	 * @param array<string, mixed> $map The existing images map.
-	 * @return array<string, mixed> The modified images map with preload images.
+	 * @param array<string, mixed> $map Existing images map.
+	 * @return array<string, mixed>
 	 */
 	public function add_filter_preload_images_map( array $map ): array {
 		return $map;
 	}
 
 	/**
-	 * Filter the preload JS modules map from a skin.
+	 * Extension point for the `arts/optimizer/preloads/modules_map` filter.
 	 *
-	 * @param array<string, mixed> $map The existing modules map.
-	 * @return array<string, mixed> The modified modules map with preload modules.
+	 * @param array<string, mixed> $map Existing modules map.
+	 * @return array<string, mixed>
 	 */
 	public function add_filter_preload_modules_map( array $map ): array {
 		return $map;
 	}
 
 	/**
-	 * Filter the prefetch URLs map from a skin.
+	 * Extension point for the `arts/optimizer/preloads/prefetch_map` filter.
 	 *
-	 * @param array<string, mixed> $map The existing prefetch map.
-	 * @return array<string, mixed> The modified prefetch map with prefetch URLs.
+	 * @param array<string, mixed> $map Existing prefetch map.
+	 * @return array<string, mixed>
 	 */
 	public function add_filter_prefetch_map( array $map ): array {
 		return $map;
 	}
 
 	/**
-	 * Retrieves settings for display.
-	 * Proxy to the parent widget's `get_settings` method.
+	 * Returns the parent widget's display values for the listed skin-prefixed
+	 * settings. Keys in the returned array are the original (unprefixed) names.
 	 *
-	 * @param array<int, string> $selected_settings Array of selected settings.
-	 * @return array<string, mixed> Array of settings for display.
+	 * @param array<int, string> $selected_settings
+	 * @return array<string, mixed>
 	 */
 	public function get_settings_for_display( array $selected_settings = array() ): array {
 		$settings = array();
@@ -87,25 +86,23 @@ abstract class BaseSkin extends Skin_Base {
 	}
 
 	/**
-	 * Retrieve the value of a specified option.
-	 * Proxy to the parent widget's `get_option_value` method.
+	 * Proxy to BaseWidget::get_option_value() on the attached parent widget.
 	 *
-	 * @param string $option The option name.
-	 * @param string $group_control_prefix Optional. The prefix for group control. Default is ''.
-	 * @param bool   $return_size Optional. Whether to return the size if available. Default is true.
+	 * @param string $option              Setting key.
+	 * @param string $group_control_prefix Prefix prepended to $option (for group controls).
+	 * @param bool   $return_size         When true, unwrap `size` from array-shaped values.
 	 *
-	 * @return mixed The option value or false if not found.
+	 * @return mixed
 	 */
 	public function get_option_value( $option, $group_control_prefix = '', $return_size = true ) {
 		return $this->parent->get_option_value( $option, $group_control_prefix, $return_size );
 	}
 
 	/**
-	 * Retrieve the skin setting value.
-	 * Proxy to the parent widget's `get_settings` method.
+	 * Reads a single skin-prefixed setting from the parent widget.
 	 *
-	 * @param string $setting The setting name.
-	 * @return mixed The setting value.
+	 * @param string $setting Unprefixed setting key (gets resolved via get_control_id()).
+	 * @return mixed
 	 */
 	public function get_skin_setting( $setting ) {
 		$control_id = $this->get_control_id( $setting );
