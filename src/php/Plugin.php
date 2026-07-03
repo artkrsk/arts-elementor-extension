@@ -52,7 +52,6 @@ class Plugin extends BasePlugin {
 
 	/**
 	 * WordPress action hook that gates plugin execution.
-	 * Return empty string to run immediately without hooking.
 	 *
 	 * @return string
 	 */

@@ -98,7 +98,7 @@ class Tabs extends BaseManager {
 	}
 
 	/**
-	 * Collects EDITOR_CHANGE_CALLBACK_CONTROLS from every registered tab class
+	 * Collects EDITOR_CHANGE_CALLBACK_CONTROLS from every configured tab class
 	 * and returns the de-duplicated union.
 	 *
 	 * @return array<int, string>

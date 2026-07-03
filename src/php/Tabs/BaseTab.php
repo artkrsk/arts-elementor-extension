@@ -62,7 +62,7 @@ abstract class BaseTab extends Tab_Base {
 	 *
 	 *   "Design System"   - `global`
 	 *   "Theme Style"     - `theme-style`
-	 *   "Site Settings"   - `settings`
+	 *   "Settings"        - `settings`
 	 *
 	 * @return string 'global' | 'theme-style' | 'settings'
 	 */
@@ -72,7 +72,7 @@ abstract class BaseTab extends Tab_Base {
 
 	/**
 	 * Elementor entry point for control registration.
-	 * Wraps register_tab_controls() with before/after extension hooks.
+	 * Wraps register_tab() and register_tab_controls() with before/after extension hooks.
 	 *
 	 * @return void
 	 */

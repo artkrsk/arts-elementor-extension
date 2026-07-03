@@ -14,7 +14,7 @@ use Arts\Utilities\Utilities;
 class Editor extends BaseManager {
 	/**
 	 * Hooked on `elementor/editor/after_enqueue_scripts`. Enqueues the live-settings
-	 * bridge script and localizes the list of tab control IDs that should re-emit
+	 * bridge script and localizes the list of control IDs that should re-emit
 	 * change events in the editor. No-ops when no controls opted in.
 	 */
 	public function enqueue_live_settings_script(): void {
