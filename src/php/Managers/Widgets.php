@@ -144,8 +144,11 @@ class Widgets extends BaseManager {
 			return '';
 		}
 
-		if ( ! isset( $GLOBALS['__arts_elementor_widget_handlers'] ) ) {
-			$GLOBALS['__arts_elementor_widget_handlers'] = array();
+		// Read the cross-copy ledger into a local array. $GLOBALS entries are
+		// untyped, and anything could have written to this key first.
+		$registered = $GLOBALS['__arts_elementor_widget_handlers'] ?? array();
+		if ( ! is_array( $registered ) ) {
+			$registered = array();
 		}
 
 		$handler_strings = array();
@@ -156,7 +159,7 @@ class Widgets extends BaseManager {
 
 			$name = method_exists( $widget, 'get_name' ) ? $widget->get_name() : '';
 
-			if ( $name && in_array( $name, $GLOBALS['__arts_elementor_widget_handlers'], true ) ) {
+			if ( $name && in_array( $name, $registered, true ) ) {
 				continue;
 			}
 
@@ -164,10 +167,12 @@ class Widgets extends BaseManager {
 			if ( ! empty( $js ) ) {
 				$handler_strings[] = $js;
 				if ( $name ) {
-					$GLOBALS['__arts_elementor_widget_handlers'][] = $name;
+					$registered[] = $name;
 				}
 			}
 		}
+
+		$GLOBALS['__arts_elementor_widget_handlers'] = $registered;
 
 		if ( empty( $handler_strings ) ) {
 			return '';

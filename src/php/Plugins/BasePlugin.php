@@ -2,6 +2,7 @@
 
 namespace Arts\ElementorExtension\Plugins;
 
+use Arts\Base\Containers\ManagersContainer;
 use Arts\Base\Plugins\BasePlugin as ArtsBasePlugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,7 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Elementor-aware variant of the framework BasePlugin.
  *
- * @template TManagers of \Arts\Base\Containers\ManagersContainer
+ * The constraint is written against the imported name, not a leading-backslash
+ * FQN: Strauss rewrites `use` statements and @param/@property/@var/@return
+ * FQNs, but leaves `@template … of \FQN` untouched — which in a prefixed build
+ * would point the constraint at a class that doesn't exist.
+ *
+ * @template TManagers of ManagersContainer
  * @extends ArtsBasePlugin<TManagers>
  *
  * @package Arts\ElementorExtension\Plugins
