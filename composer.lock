@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a65d73fa69938f4439921023a398d9c",
+    "content-hash": "a59e809b8ee38519f72b9a3f6fed2993",
     "packages": [
         {
             "name": "arts/base",
@@ -161,16 +161,16 @@
         },
         {
             "name": "arts/elementor-stubs",
-            "version": "dev-master",
+            "version": "v4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/elementor-stubs.git",
-                "reference": "b0b8942f0464de7b757f29161c3db17b229bdd2c"
+                "reference": "4d4860e49b7827940bc2ae308645dc21ff48c2e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/b0b8942f0464de7b757f29161c3db17b229bdd2c",
-                "reference": "b0b8942f0464de7b757f29161c3db17b229bdd2c",
+                "url": "https://api.github.com/repos/artkrsk/elementor-stubs/zipball/4d4860e49b7827940bc2ae308645dc21ff48c2e8",
+                "reference": "4d4860e49b7827940bc2ae308645dc21ff48c2e8",
                 "shasum": ""
             },
             "require": {
@@ -182,14 +182,13 @@
             "require-dev": {
                 "captainhook/captainhook": "^5.27",
                 "ergebnis/composer-normalize": "^2.48",
-                "php-stubs/generator": "^0.8",
+                "php-stubs/generator": "^0.8 || ^0.9",
                 "phpstan/phpstan": "^2.0",
                 "phpunit/phpunit": "^9.5",
                 "squizlabs/php_codesniffer": "^3.0",
                 "vlucas/phpdotenv": "^5.6",
                 "wp-coding-standards/wpcs": "^3.0"
             },
-            "default-branch": true,
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -217,7 +216,7 @@
             ],
             "support": {
                 "issues": "https://github.com/artkrsk/elementor-stubs/issues",
-                "source": "https://github.com/artkrsk/elementor-stubs/tree/master"
+                "source": "https://github.com/artkrsk/elementor-stubs/tree/v4.2.1"
             },
             "funding": [
                 {
@@ -225,7 +224,7 @@
                     "type": "buy_me_a_coffee"
                 }
             ],
-            "time": "2026-03-05T12:11:09+00:00"
+            "time": "2026-08-01T13:49:57+00:00"
         },
         {
             "name": "brain/monkey",
@@ -3686,13 +3685,12 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "arts/base": 20,
-        "arts/elementor-stubs": 20,
         "arts/utilities": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4"
+        "php": ">=8.0"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"

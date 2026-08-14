@@ -15,7 +15,7 @@
     "arts/utilities": "@dev"
   },
   "require-dev": {
-    "arts/elementor-stubs": "@dev",
+    "arts/elementor-stubs": "^4.2",
     "brain/monkey": "^2.6",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
     "ergebnis/composer-normalize": "^2.48",
