@@ -1,4 +1,5 @@
 import eslint from '@eslint/js'
+import tseslint from 'typescript-eslint'
 import prettier from 'eslint-config-prettier'
 import globals from 'globals'
 
@@ -15,6 +16,7 @@ const elementorGlobals = {
 
 export default [
 	eslint.configs.recommended,
+	...tseslint.configs.recommended,
 	prettier,
 	{
 		ignores: [
@@ -24,7 +26,7 @@ export default [
 			'__e2e__/',
 			'__tests__/',
 			'vendor/',
-			'src/js/www',
+			
 			'src/php'
 		]
 	},
@@ -49,9 +51,9 @@ export default [
 			'no-console': 'off'
 		}
 	},
-	// Configuration for JavaScript files
+	// Configuration for TypeScript files
 	{
-		files: ['src/js/**/*.js'],
+		files: ['src/ts/**/*.ts'],
 		languageOptions: {
 			ecmaVersion: 2022,
 			sourceType: 'module',

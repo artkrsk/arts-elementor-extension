@@ -1,3 +1,9 @@
+import type { TElementorSettings, TMappingValue, TSettingsMap, TValueMapping } from '@arts/utilities'
+
+/** Slider-like dimension value probe ({ size, unit? }) */
+const isDimensionLike = (value: unknown): value is { size: unknown; unit?: string } =>
+  !!value && typeof value === 'object' && 'size' in value
+
 /**
  * Recursively resolves a value-mapping against an Elementor settings object.
  *
@@ -8,40 +14,41 @@
  *     `return_size` (false ⇒ `"<size><unit>"` when unit is present, else raw value;
  *     anything else ⇒ just the `size`).
  *   - any other object → processed recursively, keyed under each property.
- *
- * @param {Object|string} valueMapping
- * @param {Object} settings - The Elementor settings object
- * @returns {Object|*}
  */
-const processComplexValue = (valueMapping, settings) => {
+const processComplexValue = (
+  valueMapping: TValueMapping,
+  settings: TElementorSettings
+): unknown => {
   if (typeof valueMapping === 'string') {
     return settings[valueMapping]
   }
 
-  const result = {}
+  const result: Record<string, unknown> = {}
 
   Object.entries(valueMapping).forEach(([key, mapping]) => {
     if (typeof mapping === 'string') {
       result[key] = settings[mapping]
     } else if (typeof mapping === 'object') {
-      if (mapping.value) {
-        const value = settings[mapping.value]
+      const objectMapping = mapping as TMappingValue
 
-        if (mapping.return_size === false) {
-          if (value && typeof value === 'object' && value.size !== undefined && value.unit) {
+      if (objectMapping.value && typeof objectMapping.value === 'string') {
+        const value = settings[objectMapping.value]
+
+        if (objectMapping.return_size === false) {
+          if (isDimensionLike(value) && value.size !== undefined && value.unit) {
             // Concatenate size + unit (e.g. "1.5rem", "100%") so CSS-shaped
             // values can be forwarded verbatim by the consumer.
-            result[key] = `${value.size}${value.unit}`
+            result[key] = `${String(value.size)}${value.unit}`
           } else {
             result[key] = value
           }
-        } else if (value && typeof value === 'object' && value.size !== undefined) {
+        } else if (isDimensionLike(value) && value.size !== undefined) {
           result[key] = value.size
         } else {
           result[key] = value
         }
       } else {
-        result[key] = processComplexValue(mapping, settings)
+        result[key] = processComplexValue(mapping as TValueMapping, settings)
       }
     }
   })
@@ -61,13 +68,12 @@ const processComplexValue = (valueMapping, settings) => {
  *         carrying `size`, only `size` is returned.
  *       • object `value` → delegated to processComplexValue().
  *   - bare nested object (no `value`/`condition`) → recursed as a sub-map.
- *
- * @param {Object} settings - The Elementor settings object
- * @param {Object} settingsMap - Mapping of JS keys to Elementor keys
- * @returns {Object}
  */
-const convertSettings = (settings, settingsMap) => {
-  const result = {}
+const convertSettings = (
+  settings: TElementorSettings,
+  settingsMap: TSettingsMap
+): Record<string, unknown> => {
+  const result: Record<string, unknown> = {}
 
   Object.entries(settingsMap).forEach(([jsKey, elementorMapping]) => {
     if (typeof elementorMapping === 'string') {
@@ -85,20 +91,15 @@ const convertSettings = (settings, settingsMap) => {
       if (typeof elementorMapping.value === 'string') {
         const value = settings[elementorMapping.value]
 
-        if (
-          elementorMapping.return_size === true &&
-          value &&
-          typeof value === 'object' &&
-          value.size !== undefined
-        ) {
+        if (elementorMapping.return_size === true && isDimensionLike(value) && value.size !== undefined) {
           result[jsKey] = value.size
         } else {
           result[jsKey] = value
         }
       } else if (typeof elementorMapping.value === 'object' && elementorMapping.value !== null) {
-        result[jsKey] = processComplexValue(elementorMapping.value, settings)
+        result[jsKey] = processComplexValue(elementorMapping.value as TValueMapping, settings)
       } else if (!('value' in elementorMapping) && !('condition' in elementorMapping)) {
-        result[jsKey] = convertSettings(settings, elementorMapping)
+        result[jsKey] = convertSettings(settings, elementorMapping as TSettingsMap)
       }
     }
   })
@@ -109,30 +110,31 @@ const convertSettings = (settings, settingsMap) => {
 /**
  * Flattens a settings map into the de-duplicated list of Elementor setting keys
  * it depends on — used to subscribe to the right `addChangeCallback` controls.
- *
- * @param {Object} settingsMap
- * @param {Array} additionalSettings - Extra keys appended verbatim before de-duplication
- * @returns {Array<string>}
  */
-const getLiveSettings = (settingsMap = {}, additionalSettings = []) => {
-  const keys = []
+const getLiveSettings = (
+  settingsMap: TSettingsMap = {},
+  additionalSettings: string[] = []
+): string[] => {
+  const keys: string[] = []
 
-  function extractFromObject(obj) {
+  function extractFromObject(obj: unknown): void {
     if (typeof obj === 'string') {
       keys.push(obj)
     } else if (typeof obj === 'object' && obj !== null) {
-      if (obj.condition) {
-        keys.push(obj.condition)
+      const mapping = obj as TMappingValue
+
+      if (mapping.condition) {
+        keys.push(mapping.condition)
       }
 
-      if (obj.value) {
-        if (typeof obj.value === 'string') {
-          keys.push(obj.value)
-        } else if (typeof obj.value === 'object') {
-          extractFromObject(obj.value)
+      if (mapping.value) {
+        if (typeof mapping.value === 'string') {
+          keys.push(mapping.value)
+        } else if (typeof mapping.value === 'object') {
+          extractFromObject(mapping.value)
         }
       } else {
-        Object.values(obj).forEach((val) => extractFromObject(val))
+        Object.values(mapping).forEach((val) => extractFromObject(val))
       }
     }
   }

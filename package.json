@@ -44,7 +44,11 @@
     "sass": "^1.99.0",
     "vite": "^8.0.10",
     "vitest": "^4.1.5",
-    "wp-pot": "^1.10.2"
+    "wp-pot": "^1.10.2",
+    "@artemsemkin/elementor-types": "file:../elementor-types",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.61.1",
+    "ts-loader": "^9.5.7"
   },
   "pnpm": {
     "overrides": {
@@ -76,9 +80,10 @@
     "build": "node __build__/src/index.js build",
     "deps:check": "npx npm-check-updates",
     "deps:update": "npx npm-check-updates -u && pnpm install",
-    "format": "prettier --write 'src/js/**/*.{js,jsx,json,css,ts,tsx}'",
-    "format:check": "prettier --check 'src/js/**/*.{js,jsx,json,css,ts,tsx}'",
-    "lint": "eslint 'src/js/**/*.{js,ts,jsx,tsx}'",
-    "lint:fix": "eslint --fix 'src/js/**/*.{js,ts,jsx,tsx}'"
+    "format": "prettier --write 'src/ts/**/*.{js,jsx,json,css,ts,tsx}'",
+    "format:check": "prettier --check 'src/ts/**/*.{js,jsx,json,css,ts,tsx}'",
+    "lint": "eslint 'src/ts/**/*.{js,ts,jsx,tsx}'",
+    "lint:fix": "eslint --fix 'src/ts/**/*.{js,ts,jsx,tsx}'",
+    "type-check": "tsc --noEmit"
   }
 }

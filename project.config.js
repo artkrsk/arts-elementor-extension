@@ -5,7 +5,7 @@
 export default {
 	// Basic project information
 	name: 'Arts Elementor Extension',
-	entry: './src/js/index.js',
+	entry: './src/ts/index.ts',
 	author: 'Artem Semkin',
 	license: 'MIT',
 	description:
@@ -21,7 +21,7 @@ export default {
 		dist: './dist',
 		php: './src/php',
 		styles: './src/styles',
-		js: './src/js',
+		js: './src/ts',
 		wordpress: {
 			plugin: './src/wordpress-plugin',
 			languages: './src/php/languages'
@@ -32,17 +32,13 @@ export default {
 			assets: 'src/php/libraries/arts-elementor-extension'
 		},
 		aliases: {
-			'@': './src/js',
-			'@core': './src/js/core',
-			'@controls': './src/js/controls',
-			'@hooks': './src/js/hooks',
-			'@services': './src/js/services'
+			'@': './src/ts'
 		}
 	},
 
 	// Development configuration
 	dev: {
-		root: './src/js/www',
+		root: './src/ts/www',
 		server: {
 			port: 8080,
 			host: 'localhost'
