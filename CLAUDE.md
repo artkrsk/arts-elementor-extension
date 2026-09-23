@@ -83,7 +83,11 @@ The frontend widget handler dispatches `arts/elementor-base-widget/widget/{init,
 - Text domain: `arts-elementor-extension`.
 - Script handles: `arts-elementor-extension-editor-live-settings`, `arts-elementor-extension-widget-handler`.
 - Localized editor global: `artsElementorExtensionEditorLiveSettings`; frontend handler class:
-  `window.ArtsWidgetComponentHandler`.
+  `window.ArtsWidgetComponentHandler`. Its document events, consumed by `@arts/plugin-elementor-editor`:
+  `arts/elementor-base-widget/widget/init`, `…/widget/destroy`, and `…/widget/change` (a style-only
+  control write that re-renders nothing — `detail.propertyName` names the control). The handler is the
+  hand-written bundle `src/php/libraries/arts-elementor-widget-handler/index.umd.js`; it has no
+  `src/ts/` source.
 - Default kit tab id: `BaseTab::TAB_ID = 'arts-elementor-extension-custom-tab'`.
 - Boot config keys gating startup: `required_elementor_version` (default 3.18), `required_php_version`
   (default 7.4).

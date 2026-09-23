@@ -33,6 +33,23 @@
 
         document.dispatchEvent(event)
       }
+
+      // A control change that does NOT re-render the widget (Style-tab
+      // `selectors` controls, render_type 'ui'): Elementor only rewrites the
+      // element's <style> tag, so no init/destroy pair fires. Defining this
+      // method is what makes the base handler subscribe to the editor's
+      // change channel for this element.
+      onElementChange(propertyName) {
+        const event = new CustomEvent('arts/elementor-base-widget/widget/change', {
+          detail: {
+            instance: this,
+            element: this.$element.get(0),
+            propertyName
+          }
+        })
+
+        document.dispatchEvent(event)
+      }
     }
   }
 })()
