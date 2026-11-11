@@ -15,8 +15,10 @@ Built on the in-house `arts/base` framework (singleton `Plugin` + typed managers
 - PHP analysis/style: `composer check` (runs `phpcs` then `phpstan`); autofix with `composer fix`
   (phpcbf). Configs: `phpcs.xml` (WordPress standards, tabs), `phpstan.neon`.
 - JS lint/format: `pnpm lint` (eslint), `pnpm format:check` (prettier).
-- Build via the `__build__` git submodule (arts-public-builder): `pnpm build`, watch `pnpm dev`.
-  Build output lands in `dist/` (npm entry) and `src/php/libraries/*` (editor bundles PHP enqueues).
+- Build: `pnpm build` (`scripts/build.mjs`, esbuild) writes the live-settings bundle to
+  `src/php/libraries/arts-elementor-extension/index.umd.js`. There is no watch mode and no npm entry.
+- Release: the package is public, and a release is a git tag `vX.Y.Z` that Packagist serves. The
+  built bundle is therefore tracked: run `pnpm build` and commit the result before tagging.
 
 ## Layout
 
@@ -28,9 +30,10 @@ src/php/          PSR-4 `Arts\ElementorExtension\` (composer autoload)
   Widgets/        BaseWidget, BaseSkin, Traits\{Preloads,WPML}
   Tabs/           BaseTab (custom kit settings tabs)
   Plugins/        BasePlugin / BaseManager — extension points for consumer plugins
-  libraries/      pre-built editor JS enqueued by PHP (build output — do not hand-edit)
-  languages/      arts-elementor-extension.pot (generated)
-src/js/           editor bridge, plain JS + JSDoc types (jsconfig checkJs)
+  libraries/      editor JS enqueued by PHP: the built live-settings bundle (do not hand-edit) and
+                  the hand-written widget handler
+  languages/      arts-elementor-extension.pot (no build regenerates it)
+src/ts/           editor bridge, TypeScript
   editor/         LiveSettings (preview↔editor bridge), utilities (settings mapping)
 ```
 
@@ -99,13 +102,15 @@ The frontend widget handler dispatches `arts/elementor-base-widget/widget/{init,
   `class_exists()` checks before `require`, the `$GLOBALS['__arts_elementor_widget_handlers']` ledger,
   and the `$wp_scripts->registered[…]->extra['after']` inspection before `wp_add_inline_script`. Don't
   "simplify" these away.
-- Editor JS is bundled into `src/php/libraries/*` and enqueued by PHP — edit `src/js/` and rebuild,
-  never the bundles.
+- The live-settings JS is bundled into `src/php/libraries/arts-elementor-extension` and enqueued by
+  PHP — edit `src/ts/` and rebuild, never the bundle.
 - `Utilities::is_elementor_editor_active()` / `is_elementor_feature_active()` are `arts/utilities`
   wrappers, not Elementor APIs (the latter checks the experiments manager, e.g. `e_optimized_markup`).
 
 ## Dependencies
 
-- Composer: `php >=8.0`, `arts/base`, `arts/utilities` (PSR-4 `Arts\ElementorExtension\` → `src/php/`).
-- npm: `@arts/utilities` (workspace `file:../ArtsUtilities`); build/test tooling (esbuild, vite,
-  vitest, eslint, prettier, sass).
+- Composer: `php >=8.0`, `arts/base` `^1.1`, `arts/utilities` `^2.7`, both from Packagist (PSR-4
+  `Arts\ElementorExtension\` → `src/php/`).
+- npm: `@arts/utilities` (`file:../ArtsUtilities`, for `debounce`) and the type-only
+  `@artemsemkin/elementor-types` (`file:../elementor-types`); tooling is esbuild, TypeScript, eslint
+  and prettier.

@@ -122,10 +122,12 @@ class Plugin extends BasePlugin {
 			unset( $_GET['activate'] );
 		}
 
+		$extension_name = $this->strings['extension_name'];
+		assert( is_string( $extension_name ) );
 		$message = sprintf(
 			/* translators: 1: Plugin name 2: Elementor */
 			esc_html__( '"%1$s" requires "%2$s" to be installed and activated.', 'arts-elementor-extension' ),
-			'<strong>' . $this->strings['extension_name'] . '</strong>',
+			'<strong>' . $extension_name . '</strong>',
 			'<strong>' . esc_html__( 'Elementor', 'arts-elementor-extension' ) . '</strong>'
 		);
 
@@ -144,10 +146,12 @@ class Plugin extends BasePlugin {
 
 		$required_version = $this->config['required_elementor_version'] ?? '3.18';
 		assert( is_string( $required_version ) );
+		$extension_name = $this->strings['extension_name'];
+		assert( is_string( $extension_name ) );
 		$message = sprintf(
 			/* translators: 1: Plugin name 2: Elementor 3: Required Elementor version */
 			esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'arts-elementor-extension' ),
-			'<strong>' . $this->strings['extension_name'] . '</strong>',
+			'<strong>' . $extension_name . '</strong>',
 			'<strong>' . esc_html__( 'Elementor', 'arts-elementor-extension' ) . '</strong>',
 			$required_version
 		);
@@ -167,10 +171,12 @@ class Plugin extends BasePlugin {
 
 		$required_version = $this->config['required_php_version'] ?? '7.4';
 		assert( is_string( $required_version ) );
+		$extension_name = $this->strings['extension_name'];
+		assert( is_string( $extension_name ) );
 		$message = sprintf(
 			/* translators: 1: Plugin name 2: PHP 3: Required PHP version */
 			esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'arts-elementor-extension' ),
-			'<strong>' . $this->strings['extension_name'] . '</strong>',
+			'<strong>' . $extension_name . '</strong>',
 			'<strong>' . esc_html__( 'PHP', 'arts-elementor-extension' ) . '</strong>',
 			'<strong>' . $required_version . '</strong>'
 		);

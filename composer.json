@@ -11,8 +11,8 @@
   ],
   "require": {
     "php": ">=8.0",
-    "arts/base": "@dev",
-    "arts/utilities": "@dev"
+    "arts/base": "^1.1",
+    "arts/utilities": "^2.7"
   },
   "require-dev": {
     "arts/elementor-stubs": "^4.2",

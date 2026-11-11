@@ -50,6 +50,7 @@ README.md export-ignore
 .vscode export-ignore
 fixtures export-ignore
 captainhook.json export-ignore
+composer.lock export-ignore
 phpstan.neon export-ignore
 .editorconfig export-ignore
 

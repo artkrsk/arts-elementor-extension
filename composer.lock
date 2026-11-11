@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a59e809b8ee38519f72b9a3f6fed2993",
+    "content-hash": "b002c2b758aeef8f6b43eab8686d2b69",
     "packages": [
         {
             "name": "arts/base",
-            "version": "dev-main",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/arts-base.git",
-                "reference": "dcd32b4ff54471d7bd8ce5e9f512f62f30674c25"
+                "reference": "f30e6ee4d986819bf92a7fd0e0773178825fa9fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/arts-base/zipball/dcd32b4ff54471d7bd8ce5e9f512f62f30674c25",
-                "reference": "dcd32b4ff54471d7bd8ce5e9f512f62f30674c25",
+                "url": "https://api.github.com/repos/artkrsk/arts-base/zipball/f30e6ee4d986819bf92a7fd0e0773178825fa9fa",
+                "reference": "f30e6ee4d986819bf92a7fd0e0773178825fa9fa",
                 "shasum": ""
             },
             "require": {
@@ -32,7 +32,6 @@
                 "szepeviktor/phpstan-wordpress": "^2.0",
                 "wp-coding-standards/wpcs": "^3.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -52,29 +51,29 @@
             "description": "Framework-agnostic base classes for Arts WordPress plugins",
             "support": {
                 "issues": "https://github.com/artkrsk/arts-base/issues",
-                "source": "https://github.com/artkrsk/arts-base/tree/main"
+                "source": "https://github.com/artkrsk/arts-base/tree/v1.1.2"
             },
-            "time": "2026-02-28T19:21:58+00:00"
+            "time": "2026-09-24T18:40:08+00:00"
         },
         {
             "name": "arts/utilities",
-            "version": "dev-master",
+            "version": "v2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/artkrsk/arts-utilities.git",
-                "reference": "fac1765e376b50251c05787b4a4dfff74ca4b7c4"
+                "reference": "40481af8701a666a9d4dbf54a8b717adba19f82d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/artkrsk/arts-utilities/zipball/fac1765e376b50251c05787b4a4dfff74ca4b7c4",
-                "reference": "fac1765e376b50251c05787b4a4dfff74ca4b7c4",
+                "url": "https://api.github.com/repos/artkrsk/arts-utilities/zipball/40481af8701a666a9d4dbf54a8b717adba19f82d",
+                "reference": "40481af8701a666a9d4dbf54a8b717adba19f82d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.0"
             },
             "require-dev": {
-                "arts/elementor-stubs": "@dev",
+                "arts/elementor-stubs": "^4.2",
                 "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
                 "ergebnis/composer-normalize": "^2.48",
                 "php-stubs/acf-pro-stubs": "^6.5",
@@ -85,7 +84,6 @@
                 "szepeviktor/phpstan-wordpress": "^2.0",
                 "wp-coding-standards/wpcs": "^3.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -105,9 +103,9 @@
             "description": "A comprehensive collection of utility methods for WordPress theme and plugin development, with a focus on Elementor integration.",
             "support": {
                 "issues": "https://github.com/artkrsk/arts-utilities/issues",
-                "source": "https://github.com/artkrsk/arts-utilities/tree/master"
+                "source": "https://github.com/artkrsk/arts-utilities/tree/v2.7.0"
             },
-            "time": "2026-03-05T09:55:08+00:00"
+            "time": "2026-10-08T09:35:19+00:00"
         }
     ],
     "packages-dev": [
@@ -3683,15 +3681,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "arts/base": 20,
-        "arts/utilities": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.0"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
