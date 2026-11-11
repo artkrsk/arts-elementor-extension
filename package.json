@@ -27,6 +27,8 @@
   },
   "scripts": {
     "build": "node scripts/build.mjs",
+    "deps:check": "npx npm-check-updates",
+    "deps:update": "npx npm-check-updates -u && pnpm install",
     "format": "prettier --write 'src/ts/**/*.{js,jsx,json,css,ts,tsx}'",
     "format:check": "prettier --check 'src/ts/**/*.{js,jsx,json,css,ts,tsx}'",
     "lint": "eslint 'src/ts/**/*.{js,ts,jsx,tsx}'",
