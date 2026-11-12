@@ -10,10 +10,10 @@
     "node": ">=23.0.0"
   },
   "dependencies": {
-    "@arts/utilities": "file:../ArtsUtilities"
+    "@arts/utilities": "^2.7.1"
   },
   "devDependencies": {
-    "@artemsemkin/elementor-types": "file:../elementor-types",
+    "@artemsemkin/elementor-types": "^2.1.0",
     "@eslint/js": "^10.0.1",
     "@types/jquery": "^4.0.0",
     "@types/node": "^25.6.0",

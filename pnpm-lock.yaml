@@ -9,12 +9,12 @@ importers:
   .:
     dependencies:
       '@arts/utilities':
-        specifier: file:../ArtsUtilities
-        version: file:../ArtsUtilities(swiper@14.2.0)
+        specifier: ^2.7.1
+        version: 2.7.1(swiper@14.2.0)
     devDependencies:
       '@artemsemkin/elementor-types':
-        specifier: file:../elementor-types
-        version: file:../elementor-types(swiper@14.2.0)
+        specifier: ^2.1.0
+        version: 2.1.0(swiper@14.2.0)
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.2.1(supports-color@8.1.1))
@@ -53,13 +53,8 @@ packages:
     peerDependencies:
       swiper: '>=12.0.0'
 
-  '@artemsemkin/elementor-types@file:../elementor-types':
-    resolution: {directory: ../elementor-types, type: directory}
-    peerDependencies:
-      swiper: '>=12.0.0'
-
-  '@arts/utilities@file:../ArtsUtilities':
-    resolution: {directory: ../ArtsUtilities, type: directory}
+  '@arts/utilities@2.7.1':
+    resolution: {integrity: sha512-+AdT2axiBCYHRFOM5jALOwYSLn7DcjEohTafdeN3EXsxhCt4+g5R+AgCST4vN8xNtarbKmBc1K+N516ITfJTnQ==}
     engines: {node: '>=24.0.0'}
 
   '@esbuild/aix-ppc64@0.28.0':
@@ -685,14 +680,7 @@ snapshots:
       '@types/select2': 4.0.63
       swiper: 14.2.0
 
-  '@artemsemkin/elementor-types@file:../elementor-types(swiper@14.2.0)':
-    dependencies:
-      '@types/backbone': 1.4.23
-      '@types/jquery': 3.5.34
-      '@types/select2': 4.0.63
-      swiper: 14.2.0
-
-  '@arts/utilities@file:../ArtsUtilities(swiper@14.2.0)':
+  '@arts/utilities@2.7.1(swiper@14.2.0)':
     dependencies:
       '@artemsemkin/elementor-types': 2.1.0(swiper@14.2.0)
     transitivePeerDependencies:
